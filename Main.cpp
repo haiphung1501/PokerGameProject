@@ -1,8 +1,9 @@
-#include <iostream>
-using namespace std;
-
+#include <Game.h>
 int main()
 {
-  cout << "Hello World";
-  return 0;
+	int deck[4][13] = {0};
+	shuffleCards(deck);
+	printCardsShuffling(deck,suits,faces);
+	return 0;	
 }
+
