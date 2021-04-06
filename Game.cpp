@@ -35,7 +35,7 @@ void shuffleCards(int deck[SUITS][FACES]) {
         }
     }
 
-    //print deck[][]
+/*    //print deck[][]
     int count = 1;
     for (int i = 0; i < SUITS; i++) {
         for (int j = 0; j < FACES; j++) {
@@ -46,7 +46,7 @@ void shuffleCards(int deck[SUITS][FACES]) {
             count++;
         }
     }
-    cout << endl << endl;
+    cout << endl << endl;*/
 }
 //in ra Cards Shuffling
 void printCardsShuffling(int deck[SUITS][FACES], char *suits[], char *faces[]) {
@@ -101,13 +101,32 @@ void printHand(int** hand, char* suits[], char* faces[]) {
 
 }
 
+int isFourOfAKind(int** hand) {
+    int count = 1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5;j++) {
+            if (hand[i][1] == hand[j][1]) {
+                count++;
+            }
+        }
+        if (count == 4) {
+            return 1;
+        }
+        else {
+            count = 1;
+        }
+    }
+    return 0;
+}
 
 int main() {
 
     int deck[SUITS][FACES] = {0};
-    shuffleCards(deck);
-    printCardsShuffling(deck, suits, faces);
+    //shuffleCards(deck);
+    //printCardsShuffling(deck, suits, faces);
     //int** result = dealingForHand(deck);
     //printHand(result, suits, faces);
+    int check = isFourOfAKind(result);
+    cout << check;
     return 0;
 }
