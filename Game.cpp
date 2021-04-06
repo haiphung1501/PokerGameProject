@@ -119,6 +119,36 @@ int isFourOfAKind(int** hand) {
     return 0;
 }
 
+int isFlush(int** hand) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5;j++) {
+            if (hand[i][0] != hand[j][0]) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int isThreeOfAKind(int** hand) {
+    int count = 1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5;j++) {
+            if (hand[i][1] == hand[j][1]) {
+                count++;
+            }
+        }
+        if (count == 3) {
+            return 1;
+        }
+        else {
+            count = 1;
+        }
+    }
+    return 0;
+}
+
+
 int main() {
 
     int deck[SUITS][FACES] = {0};
@@ -131,15 +161,19 @@ int main() {
     for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
-    result[0][0] = 0; result[0][1] = 1;
-    result[1][0] = 1; result[1][1] = 1;
-    result[2][0] = 2; result[2][1] = 1;
-    result[3][0] = 3; result[3][1] = 2;
-    result[4][0] = 3; result[4][1] = 1;
+    result[0][0] = 2; result[0][1] = 12;
+    result[1][0] = 3; result[1][1] = 12;
+    result[2][0] = 0; result[2][1] = 12;
+    result[3][0] = 1; result[3][1] = 12;
+    result[4][0] = 2; result[4][1] = 6;
 
     printHand(result, suits, faces);
 
-    int check = isFourOfAKind(result);
-    cout << check;
+//    int check = isFourOfAKind(result);
+//    cout << check << endl;
+//    int check = isFlush(result);
+//    cout << check << endl;
+    int check = isThreeOfAKind(result);
+    cout << check << endl;
     return 0;
 }
