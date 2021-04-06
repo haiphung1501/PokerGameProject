@@ -125,7 +125,20 @@ int main() {
     //shuffleCards(deck);
     //printCardsShuffling(deck, suits, faces);
     //int** result = dealingForHand(deck);
-    //printHand(result, suits, faces);
+
+    //check truc tiep
+    int** result = new int*[5];
+    for (int i = 0; i < 5; i++) {
+        result[i] = new int[2];
+    }
+    result[0][0] = 0; result[0][1] = 1;
+    result[1][0] = 1; result[1][1] = 1;
+    result[2][0] = 2; result[2][1] = 1;
+    result[3][0] = 3; result[3][1] = 2;
+    result[4][0] = 3; result[4][1] = 1;
+
+    printHand(result, suits, faces);
+
     int check = isFourOfAKind(result);
     cout << check;
     return 0;
