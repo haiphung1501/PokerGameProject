@@ -279,9 +279,9 @@ int getHighestCard(int** hand) {
 int main() {
 
     int deck[SUITS][FACES] = {0};
-    //shuffleCards(deck);
-    //printCardsShuffling(deck, suits, faces);
-    //int** result = dealingForHand(deck);
+    // shuffleCards(deck);
+    // printCardsShuffling(deck, suits, faces);
+    // int** result = dealingForHand(deck);
 
     // check truc tiep
     int** result = new int*[5];
