@@ -153,36 +153,24 @@ int isThreeOfAKind(int** hand) {
     return 0;
 }
 int isStraight(int** hand) {
-    int* temp = new int[5];
-    for (int i = 0; i < 5; i++) {
-        temp[i] = hand[i][1];
-    }
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5; j++) {
-            if (temp[i] > temp[j]) {
-                int t = temp[i];
-                temp[i] = temp[j];
-                temp[j] = t;
-            }
-        }
-    }
-
-    if (temp[0] == 0 && temp[1] == 9) { //xet truong hop 10 J Q K A
-        for (int i = 1; i < 4; i++) {
-            if (temp[i] != temp[i+1] - 1) {
-                return 0;
-            }
-        }
-        return 1;
-    }
-    else { //truong hop binh thuong
-        for (int i = 0; i < 4; i++) {
-            if (temp[i] != temp[i+1] - 1) {
-                return 0;
-            }
-        }
-    }
-    return 1;
+	if ( hand[0][0] == 0 && hand[1][0] == 9)
+	{
+		for ( int i = 0; i < 4; i++)
+		{
+			if (hand[i][0] != hand[i+1][0] - 1)
+				return 0;
+		}
+		return 1;
+	}
+	else 
+	{
+		for ( int i = 0; i < 4; i++	)
+		{
+			if ( hand[i][0] != hand[i+1][0] - 1)
+				return 0;
+		}
+	}
+	return 1;
 }
 int isPair(int** hand)
 {
