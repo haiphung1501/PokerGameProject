@@ -9,8 +9,8 @@ using namespace std;
 const int SUITS = 4;
 const int FACES = 13;
 
-char *suits[SUITS] = {"\3", "\4", "\5", "\6"};
-char *faces[FACES] = {"Ace", "2", "3", "4", "5",
+char* suits[SUITS] = {"\3", "\4", "\5", "\6"};
+char* faces[FACES] = {"Ace", "2", "3", "4", "5",
 "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
 
 //ham shuffle Cards
@@ -148,6 +148,43 @@ int isThreeOfAKind(int** hand) {
     return 0;
 }
 
+int isStraight(int** hand) {
+    int* temp = new int[5];
+    for (int i = 0; i < 5; i++) {
+        temp[i] = hand[i][1];
+    }
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            if (temp[i] > temp[j]) {
+                int t = temp[i];
+                temp[i] = temp[j];
+                temp[j] = t;
+            }
+        }
+    }
+
+    //check temp
+    // for (int i = 0; i < 5; i++) {
+    //     cout << temp[i] << " ";
+    // }
+
+    if (temp[0] == 0 && temp[1] == 9) { //xet truong hop 10 J Q K A
+        for (int i = 1; i < 4; i++) {
+            if (temp[i] != temp[i+1] - 1) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+    else { //truong hop binh thuong
+        for (int i = 0; i < 4; i++) {
+            if (temp[i] != temp[i+1] - 1) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
 
 int main() {
 
@@ -162,18 +199,20 @@ int main() {
         result[i] = new int[2];
     }
     result[0][0] = 2; result[0][1] = 12;
-    result[1][0] = 3; result[1][1] = 12;
-    result[2][0] = 0; result[2][1] = 12;
-    result[3][0] = 1; result[3][1] = 12;
-    result[4][0] = 2; result[4][1] = 6;
+    result[1][0] = 3; result[1][1] = 10;
+    result[2][0] = 0; result[2][1] = 11;
+    result[3][0] = 1; result[3][1] = 0;
+    result[4][0] = 2; result[4][1] = 9;
 
     printHand(result, suits, faces);
 
-//    int check = isFourOfAKind(result);
-//    cout << check << endl;
-//    int check = isFlush(result);
-//    cout << check << endl;
-    int check = isThreeOfAKind(result);
+    // int check = isFourOfAKind(result);
+    // cout << check << endl;
+    // int check = isFlush(result);
+    // cout << check << endl;
+    // int check = isThreeOfAKind(result);
+    // cout << check << endl;
+    int check = isStraight(result);
     cout << check << endl;
     return 0;
 }
