@@ -73,30 +73,30 @@ int** dealingForHand(int deck[SUITS][FACES])
 	t = 0;
 	for ( int i = 0; i < 5; i++)
 	{
-			result[i][0] = temp[t] / 4;
+			result[i][1] = temp[t] / 4;
 			t++;
 	}
 	t = 0;
 	for ( int i = 0; i < 5; i++)
 	{
-		result[i][1] = temp[t] % 4;
+		result[i][0] = temp[t] % 4;
 		t++;
 	}
-	//Sorting
+	//Sorting Cards
 	int test = 0;
 	int test_1 = 0;
 	for ( int i = 0;  i < 4 ; i++){
 		for ( int j = i + 1; j < 5; j++)
 		{
-			if ( result[i][0] > result[j][0])
+			if ( result[i][1] > result[j][1])
 			{
-				test = result[i][0];
-				result[i][0] = result[j][0];
-				result[j][0] = test;
-
-				test_1 = result[i][1];
+				test = result[i][1];
 				result[i][1] = result[j][1];
-				result[j][1] = test_1;
+				result[j][1] = test;
+
+				test_1 = result[i][0];
+				result[i][0] = result[j][0];
+				result[j][0] = test_1;
 			}
 		}
 	}
@@ -105,7 +105,7 @@ int** dealingForHand(int deck[SUITS][FACES])
 void printHand(int** hand, char* suits[], char* faces[])
 {
 	for ( int i = 0; i < 5; i++)
-		cout << faces[hand[i][0]] << suits[hand[i][1]] << "\n";
+		cout << faces[hand[i][1]] << suits[hand[i][0]] << "\n";
 }	
 
 int isFourOfAKind(int** hand) {
@@ -153,11 +153,11 @@ int isThreeOfAKind(int** hand) {
     return 0;
 }
 int isStraight(int** hand) {
-	if ( hand[0][0] == 0 && hand[1][0] == 9)
+	if ( hand[0][1] == 0 && hand[1][1] == 9)
 	{
 		for ( int i = 0; i < 4; i++)
 		{
-			if (hand[i][0] != hand[i+1][0] - 1)
+			if (hand[i][1] != hand[i+1][1] - 1)
 				return 0;
 		}
 		return 1;
@@ -166,7 +166,7 @@ int isStraight(int** hand) {
 	{
 		for ( int i = 0; i < 4; i++	)
 		{
-			if ( hand[i][0] != hand[i+1][0] - 1)
+			if ( hand[i][1] != hand[i+1][1] - 1)
 				return 0;
 		}
 	}
@@ -188,20 +188,72 @@ int isPair(int** hand)
             count = 1;
         }
     }
+	return 0;
 }
 int isTwoPairs(int** hand){
+	int count = 1;
+	for ( int i = 0; i < 4; i++)
+	{
+		for ( int j = i + 1; j < 5; j++)
+		{
+			if (hand[i][1] == hand[j][1])
+				count++;
+		}
+	}
+	if ( count == 3)
+		return 1;
+	return 0;
+}
+int isFullHouse(int** hand)
+{
+	if (isThreeOfAKind(hand) == 0)
+		return 0;
+	int ThreeOfAKind = 0;
+	//code three of a kind to find a temporary variable
+	int count = 1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5;j++) {
+            if (hand[i][1] == hand[j][1]) {
+                count++;
+            }
+        }
+        if (count == 3)
+            ThreeOfAKind = hand[i][1];
+		else
+			count == 1;
+    }
+
+	count = 1;
+    for (int i = 0; i < 4; i++) {
+		count = 1;
+        for (int j = i + 1; j < 5;j++) 
+		{
+            if (hand[i][1] == hand[j][1]) 
+                count++;
+        }
+        if (count == 2 && hand[i][1] != ThreeOfAKind) 
+			return 1;
+    }
+	return 0;
 	
 }
 int main()
 {
 	int deck[4][13] = {0};
-	shuffleCards(deck);
+	int** result = new int*[5];
+    for (int i = 0; i < 5; i++) {
+        result[i] = new int[2];
+    }
+    result[0][0] = 1; result[0][1] = 3;
+    result[1][0] = 2; result[1][1] = 3;
+    result[2][0] = 3; result[2][1] = 3;
+    result[3][0] = 0; result[3][1] = 1;
+    result[4][0] = 1; result[4][1] = 1;
+	//shuffleCards(deck);
 	//printCardsShuffling(deck,suits,faces);
-	dealingForHand(deck);
-	//sortingCards(dealingForHand(deck));
-	printHand(dealingForHand(deck),suits,faces);
-	//if (isFourOfAKind(dealingForHand(deck)) == 1)
-		//cout << "Tu quy";
+	//dealingForHand(deck);
+	printHand(result,suits,faces);
+	cout << " " << isFullHouse(result);
 	return 0;	
 
 }
