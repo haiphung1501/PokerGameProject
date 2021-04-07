@@ -95,10 +95,13 @@ void printHand(int** hand, char* suits[], char* faces[]) {
         }
         cout << endl;
     }*/
-    for (int i = 0; i < 5; i++) {
-        cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
-    }
-    cout << endl << endl;
+    //check
+    // for (int i = 0; i < 5; i++) {
+    //     cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
+    // }
+
+    // cout << endl << endl;
+    
     for (int i = 0; i < 4; i++) {
         for (int j = i + 1; j < 5; j++) {
             if (hand[i][1] > hand[j][1]) {
@@ -196,6 +199,24 @@ int isStraightFlush(int** hand) {
     }
     return 0; 
 }
+//check 1 pair
+int isPair(int** hand) {
+    int count = 1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5;j++) {
+            if (hand[i][1] == hand[j][1]) {
+                count++;
+            }
+        }
+        if (count == 2) {
+            return 1;
+        }
+        else {
+            count = 1;
+        }
+    }
+    return 0;
+}
 
 int main() {
 
@@ -210,9 +231,9 @@ int main() {
         result[i] = new int[2];
     }
     result[0][0] = 1; result[0][1] = 3;
-    result[1][0] = 1; result[1][1] = 4;
-    result[2][0] = 1; result[2][1] = 1;
-    result[3][0] = 1; result[3][1] = 0;
+    result[1][0] = 3; result[1][1] = 4;
+    result[2][0] = 1; result[2][1] = 4;
+    result[3][0] = 0; result[3][1] = 4;
     result[4][0] = 1; result[4][1] = 2;
 
     printHand(result, suits, faces);
@@ -225,7 +246,9 @@ int main() {
     // cout << check << endl;
     // int check = isStraight(result);
     // cout << check << endl;
-    int check = isStraightFlush(result);
-    cout << check << endl;
+    // int check = isStraightFlush(result);
+    // cout << check << endl;
+    // int check = isPair(result);
+    // cout << check << endl;
     return 0;
 }
