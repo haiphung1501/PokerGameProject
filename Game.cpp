@@ -116,54 +116,56 @@ void printHand(int** hand, char* suits[], char* faces[]) {
     }
 
 }
-//check tu quy
+//check fourofakind
 int isFourOfAKind(int** hand) {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 4) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) {//xet tu quy
+        if (temp[i] == 4) {
             return 1;
         }
-        else {
-            count = 1;
-        }
     }
+
     return 0;
 }
-//check thung
+//check flush
 int isFlush(int** hand) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][0] != hand[j][0]) {
-                return 0;
-            }
-        }
+    int* temp = new int[4]; //tao mot mang chua so lan xuat hien cua 4 chat
+    for (int i = 0; i < 4; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
     }
-    return 1;
-}
-//chech 3 la
-int isThreeOfAKind(int** hand) {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 3) {
+    for (int i = 0; i < 5; i++) { //dem so lan xuat hien cua cac chat
+        temp[hand[i][0]]++;
+    }
+    for (int i = 0; i < 4; i++) { //xet thung
+        if (temp[i] == 5) {
             return 1;
-        }
-        else {
-            count = 1;
         }
     }
     return 0;
 }
-//check sanh
+//check threeofakind
+int isThreeOfAKind(int** hand) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) { //dem so lan xuat hien cua cac la bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) { //xet 3 la
+        if (temp[i] == 3) {
+            return 1;
+        }
+    }
+    return 0;
+}
+//check straight
 int isStraight(int** hand) {
     int* temp = new int[5];
     for (int i = 0; i < 5; i++) {
@@ -192,7 +194,7 @@ int isStraight(int** hand) {
     }
     return 1;
 }
-//check thung pha sanh
+//check straightflush
 int isStraightFlush(int** hand) {
     if (isStraight(hand) == 1 && isFlush(hand) == 1) {
         return 1;
@@ -201,19 +203,45 @@ int isStraightFlush(int** hand) {
 }
 //check 1 pair
 int isPair(int** hand) {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 2) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua 13 la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) {//xet 1 doi
+        if (temp[i] == 2) {
             return 1;
         }
-        else {
-            count = 1;
+    }
+
+    return 0;
+}
+// chech 2 pairs
+int isTwoPairs(int** hand) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua 13 la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    int count = 0;
+    for (int i = 0; i < 13; i++) {//dem so doi
+        if (temp[i] == 2) {
+            count++;
         }
+    }
+    if (count == 2) { //xet 2 doi
+        return 1;
+    }
+    return 0;
+}
+// check fullhouse
+int isFullHouse(int** hand) {
+    if (isPair(hand) == 1 && isThreeOfAKind(hand) == 1) { //xet cu lu
+        return 1;
     }
     return 0;
 }
@@ -230,11 +258,11 @@ int main() {
     for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
-    result[0][0] = 1; result[0][1] = 3;
-    result[1][0] = 3; result[1][1] = 4;
-    result[2][0] = 1; result[2][1] = 4;
-    result[3][0] = 0; result[3][1] = 4;
-    result[4][0] = 1; result[4][1] = 2;
+    result[0][0] = 1; result[0][1] = 12;
+    result[1][0] = 2; result[1][1] = 10;
+    result[2][0] = 2; result[2][1] = 12;
+    result[3][0] = 1; result[3][1] = 10;
+    result[4][0] = 3; result[4][1] = 12;
 
     printHand(result, suits, faces);
 
@@ -249,6 +277,10 @@ int main() {
     // int check = isStraightFlush(result);
     // cout << check << endl;
     // int check = isPair(result);
+    // cout << check << endl;
+    // int check = isTwoPairs(result);
+    // cout << check << endl;
+    // int check = isFullHouse(result);
     // cout << check << endl;
     return 0;
 }
