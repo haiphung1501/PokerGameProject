@@ -98,6 +98,19 @@ void printHand(int** hand, char* suits[], char* faces[]) {
     for (int i = 0; i < 5; i++) {
         cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
     }
+    cout << endl << endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            if (hand[i][1] > hand[j][1]) {
+                swap(hand[i][1], hand[j][1]);
+                swap(hand[i][0], hand[i][0]);
+            }
+        }
+    }
+
+    for (int i = 0; i < 5; i++) {
+        cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
+    }
 
 }
 
@@ -153,15 +166,6 @@ int isStraight(int** hand) {
     for (int i = 0; i < 5; i++) {
         temp[i] = hand[i][1];
     }
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5; j++) {
-            if (temp[i] > temp[j]) {
-                int t = temp[i];
-                temp[i] = temp[j];
-                temp[j] = t;
-            }
-        }
-    }
 
     //check temp
     // for (int i = 0; i < 5; i++) {
@@ -189,20 +193,20 @@ int isStraight(int** hand) {
 int main() {
 
     int deck[SUITS][FACES] = {0};
-    //shuffleCards(deck);
+    shuffleCards(deck);
     //printCardsShuffling(deck, suits, faces);
-    //int** result = dealingForHand(deck);
+    int** result = dealingForHand(deck);
 
-    //check truc tiep
-    int** result = new int*[5];
-    for (int i = 0; i < 5; i++) {
-        result[i] = new int[2];
-    }
-    result[0][0] = 2; result[0][1] = 12;
-    result[1][0] = 3; result[1][1] = 10;
-    result[2][0] = 0; result[2][1] = 11;
-    result[3][0] = 1; result[3][1] = 0;
-    result[4][0] = 2; result[4][1] = 9;
+    // check truc tiep
+    // int** result = new int*[5];
+    // for (int i = 0; i < 5; i++) {
+    //     result[i] = new int[2];
+    // }
+    // result[0][0] = 2; result[0][1] = 12;
+    // result[1][0] = 3; result[1][1] = 10;
+    // result[2][0] = 0; result[2][1] = 11;
+    // result[3][0] = 1; result[3][1] = 0;
+    // result[4][0] = 2; result[4][1] = 9;
 
     printHand(result, suits, faces);
 
@@ -212,7 +216,7 @@ int main() {
     // cout << check << endl;
     // int check = isThreeOfAKind(result);
     // cout << check << endl;
-    int check = isStraight(result);
-    cout << check << endl;
+    //int check = isStraight(result);
+    //cout << check << endl;
     return 0;
 }
