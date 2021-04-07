@@ -113,7 +113,7 @@ void printHand(int** hand, char* suits[], char* faces[]) {
     }
 
 }
-
+//check tu quy
 int isFourOfAKind(int** hand) {
     int count = 1;
     for (int i = 0; i < 4; i++) {
@@ -131,7 +131,7 @@ int isFourOfAKind(int** hand) {
     }
     return 0;
 }
-
+//check thung
 int isFlush(int** hand) {
     for (int i = 0; i < 4; i++) {
         for (int j = i + 1; j < 5;j++) {
@@ -142,7 +142,7 @@ int isFlush(int** hand) {
     }
     return 1;
 }
-
+//chech 3 la
 int isThreeOfAKind(int** hand) {
     int count = 1;
     for (int i = 0; i < 4; i++) {
@@ -160,7 +160,7 @@ int isThreeOfAKind(int** hand) {
     }
     return 0;
 }
-
+//check sanh
 int isStraight(int** hand) {
     int* temp = new int[5];
     for (int i = 0; i < 5; i++) {
@@ -189,24 +189,31 @@ int isStraight(int** hand) {
     }
     return 1;
 }
+//check thung pha sanh
+int isStraightFlush(int** hand) {
+    if (isStraight(hand) == 1 && isFlush(hand) == 1) {
+        return 1;
+    }
+    return 0; 
+}
 
 int main() {
 
     int deck[SUITS][FACES] = {0};
-    shuffleCards(deck);
+    //shuffleCards(deck);
     //printCardsShuffling(deck, suits, faces);
-    int** result = dealingForHand(deck);
+    //int** result = dealingForHand(deck);
 
     // check truc tiep
-    // int** result = new int*[5];
-    // for (int i = 0; i < 5; i++) {
-    //     result[i] = new int[2];
-    // }
-    // result[0][0] = 2; result[0][1] = 12;
-    // result[1][0] = 3; result[1][1] = 10;
-    // result[2][0] = 0; result[2][1] = 11;
-    // result[3][0] = 1; result[3][1] = 0;
-    // result[4][0] = 2; result[4][1] = 9;
+    int** result = new int*[5];
+    for (int i = 0; i < 5; i++) {
+        result[i] = new int[2];
+    }
+    result[0][0] = 1; result[0][1] = 3;
+    result[1][0] = 1; result[1][1] = 4;
+    result[2][0] = 1; result[2][1] = 1;
+    result[3][0] = 1; result[3][1] = 0;
+    result[4][0] = 1; result[4][1] = 2;
 
     printHand(result, suits, faces);
 
@@ -216,7 +223,9 @@ int main() {
     // cout << check << endl;
     // int check = isThreeOfAKind(result);
     // cout << check << endl;
-    //int check = isStraight(result);
-    //cout << check << endl;
+    // int check = isStraight(result);
+    // cout << check << endl;
+    int check = isStraightFlush(result);
+    cout << check << endl;
     return 0;
 }
