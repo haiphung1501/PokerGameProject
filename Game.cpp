@@ -196,7 +196,7 @@ int isStraight(int** hand) {
 }
 //check straightflush
 int isStraightFlush(int** hand) {
-    if (isStraight(hand) == 1 && isFlush(hand) == 1) {
+    if (isStraight(hand) && isFlush(hand)) {
         return 1;
     }
     return 0; 
@@ -240,7 +240,37 @@ int isTwoPairs(int** hand) {
 }
 // check fullhouse
 int isFullHouse(int** hand) {
-    if (isPair(hand) == 1 && isThreeOfAKind(hand) == 1) { //xet cu lu
+    if (isPair(hand) && isThreeOfAKind(hand)) { //xet cu lu
+        return 1;
+    }
+    return 0;
+}
+//test
+//int** createHandTest(int deck[SUITS][FACES]), int a[]) {}
+//lay gia tri cao nhat
+int getHighestCard(int** hand) {
+    if (isStraightFlush(hand)) {
+        return 8;
+    }
+    if (isFourOfAKind(hand)) {
+        return 7;
+    }
+    if (isFullHouse(hand)) {
+        return 6;
+    }
+    if (isFlush(hand)) {
+        return 5;
+    }
+    if (isStraight(hand)) {
+        return 4;
+    }
+    if (isThreeOfAKind(hand)) {
+        return 3;
+    }
+    if (isTwoPairs(hand)) {
+        return 2;
+    }
+    if (isPair(hand)) {
         return 1;
     }
     return 0;
@@ -258,29 +288,14 @@ int main() {
     for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
-    result[0][0] = 1; result[0][1] = 12;
-    result[1][0] = 2; result[1][1] = 10;
-    result[2][0] = 2; result[2][1] = 12;
-    result[3][0] = 1; result[3][1] = 10;
-    result[4][0] = 3; result[4][1] = 12;
+    result[0][0] = 0; result[0][1] = 2;
+    result[1][0] = 3; result[1][1] = 0;
+    result[2][0] = 2; result[2][1] = 0;
+    result[3][0] = 1; result[3][1] = 1;
+    result[4][0] = 1; result[4][1] = 0;
 
     printHand(result, suits, faces);
 
-    // int check = isFourOfAKind(result);
-    // cout << check << endl;
-    // int check = isFlush(result);
-    // cout << check << endl;
-    // int check = isThreeOfAKind(result);
-    // cout << check << endl;
-    // int check = isStraight(result);
-    // cout << check << endl;
-    // int check = isStraightFlush(result);
-    // cout << check << endl;
-    // int check = isPair(result);
-    // cout << check << endl;
-    // int check = isTwoPairs(result);
-    // cout << check << endl;
-    // int check = isFullHouse(result);
-    // cout << check << endl;
+    cout << getHighestCard(result);
     return 0;
 }
