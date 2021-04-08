@@ -13,8 +13,8 @@
 using namespace std;
 
 char* suits[SUITS] = {"\3", "\4", "\5", "\6"};
-char* faces[FACES] = {"Ace", "2", "3", "4", "5",
-"6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+char* faces[FACES] = {"A", "2", "3", "4", "5",
+"6", "7", "8", "9", "10", "J", "Q", "K"};
 
 //ham shuffle Cards
 void shuffleCards(int deck[SUITS][FACES]) {
