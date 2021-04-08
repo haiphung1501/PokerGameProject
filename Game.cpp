@@ -73,16 +73,25 @@ int** dealingForHand(int deck[SUITS][FACES]) {
     int t = 0; //t1 la bieu thi cho quan bai trong result
 
     //duyet gia tri tim 5 la bai dau tien
-    for (int num = 1; num <= 5; num++) {
+    int num = 1;
+    int ok = 0;
+    while (num <= 5) {
         for (int i = 0; i < SUITS; i++) {
             for (int j = 0; j < FACES; j++) {
                 if (deck[i][j] == num) {
                     result[t][0] = i;
                     result[t][1] = j;
                     t++;
+                    ok = 1;
+                    break;
                 }
             }
+            if (ok == 1) {
+                break;
+            }
         }
+        ok = 0;
+        num++;
     }
     return result;
 }
@@ -276,6 +285,61 @@ int getHighestCard(int** hand) {
     return 0;
 }
 
+int***dealingForHands(int deck[SUITS][FACES], int n) {
+    int*** results = new int**[n];
+    for (int i = 0; i < n; i++) {
+        results[i] = new int*[5];
+        for (int j = 0; j < 5; i++) {
+            results[i][j] = new int[2];
+        }
+    }
+
+    int t = 0; //t1 la bieu thi cho quan bai trong result
+
+    //duyet gia tri tim 5 la bai dau tien
+    int num = 1;
+    int ok = 0;
+    for (int p = 0; p < n; p++) {
+        while (num <= 5) {
+            for (int i = 0; i < SUITS; i++) {
+                for (int j = 0; j < FACES; j++) {
+                    if (deck[i][j] == num) {
+                        results[p][t][0] = i;
+                        results[p][t][1] = j;
+                        t++;
+                        ok = 1;
+                        break;
+                    }
+                }
+                if (ok == 1) {
+                    break;
+                }
+            }
+            ok = 0;
+            num++;
+        }
+    }
+    return results;
+}
+
+void printHands(int*** hand, char* suits[], char* faces[]) {
+    int x;
+    cout << "nhap vao nguoi choi muon xem bai: ";
+    cin >> x;
+    for (int i = 0; i < 4; i++) {
+        for (int j = i + 1; j < 5; j++) {
+            if (hand[i][1] > hand[j][1]) {
+                swap(hand[x - 1][i][1], hand[x - 1][j][1]);
+                swap(hand[x - 1][i][0], hand[x - 1][i][0]);
+            }
+        }
+    }
+
+    for (int i = 0; i < 5; i++) {
+        cout << faces[hand[x - 1][i][1]] << suits[hand[x - 1][i][0]] << "\t" << endl;
+    }
+}
+
 int main() {
 
     int deck[SUITS][FACES] = {0};
@@ -284,18 +348,25 @@ int main() {
     // int** result = dealingForHand(deck);
 
     // check truc tiep
-    int** result = new int*[5];
-    for (int i = 0; i < 5; i++) {
-        result[i] = new int[2];
-    }
-    result[0][0] = 0; result[0][1] = 2;
-    result[1][0] = 3; result[1][1] = 0;
-    result[2][0] = 2; result[2][1] = 0;
-    result[3][0] = 1; result[3][1] = 1;
-    result[4][0] = 1; result[4][1] = 0;
+    // int** result = new int*[5];
+    // for (int i = 0; i < 5; i++) {
+    //     result[i] = new int[2];
+    // }
+    // result[0][0] = 0; result[0][1] = 2;
+    // result[1][0] = 3; result[1][1] = 0;
+    // result[2][0] = 2; result[2][1] = 0;
+    // result[3][0] = 1; result[3][1] = 1;
+    // result[4][0] = 1; result[4][1] = 0;
 
-    printHand(result, suits, faces);
+    // printHand(result, suits, faces);
 
-    cout << getHighestCard(result);
+    // cout << getHighestCard(result);
+
+    int n;
+    cout << "nhap vao so nguoi choi: ";
+    cin >> n;
+    int***results = dealingForHands(deck, n);
+    printHands(results, suits, faces);
+
     return 0;
 }
