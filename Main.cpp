@@ -46,8 +46,7 @@ void printCardsShuffling(int deck[4][13], char *suits[], char *faces[])
 	{
 		for ( int j = 0; j < FACES; j++)
 		{
-			//cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << " ";
-            cout << deck[i][j] << " ";
+			cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << " ";
 		}
 		cout << "\n";
 	};
@@ -164,10 +163,19 @@ int isStraight(int** hand) {
         temp[i] = hand[i][1];
     }
 
-    //check temp
-    // for (int i = 0; i < 5; i++) {
-    //     cout << temp[i] << " ";
-    // }
+    int test = 0;
+    for ( int i = 0; i < 4; i++)
+    {
+        for ( int j = 0 ; j < 5; j++)
+        {
+            if (temp[j] > temp[i])
+            {
+                test = temp[i];
+                temp[i] = temp[j];
+                temp[j] = test;
+            }
+        }
+    }
 
     if (temp[0] == 0 && temp[1] == 9) { //xet truong hop 10 J Q K A
         for (int i = 1; i < 4; i++) {
@@ -241,33 +249,17 @@ int isFullHouse(int** hand) {
 //int** createHandTest(int deck[SUITS][FACES], int a[])
 //lay gia tri cao nhat
 int getHighestCard(int** hand) {
-    if (isStraightFlush(hand)) {
-        return 8;
+    int max = hand[0][1];
+    for ( int i = 0; i < 4; i++)
+    {
+        if ( hand[i][1] == 0)
+            return 12;
+        if ( hand[i][1] > max)
+            max = hand[i][1];
     }
-    if (isFourOfAKind(hand)) {
-        return 7;
-    }
-    if (isFullHouse(hand)) {
-        return 6;
-    }
-    if (isFlush(hand)) {
-        return 5;
-    }
-    if (isStraight(hand)) {
-        return 4;
-    }
-    if (isThreeOfAKind(hand)) {
-        return 3;
-    }
-    if (isTwoPairs(hand)) {
-        return 2;
-    }
-    if (isPair(hand)) {
-        return 1;
-    }
-    return 0;
+    return max;
 }
-int*** n_dealingForHands(int deck[SUITS][FACES], int n)
+int*** dealingForHandsS(int deck[SUITS][FACES], int n)
 {
 	int pos = 0;
 	int t = 0;
@@ -321,17 +313,98 @@ int*** n_dealingForHands(int deck[SUITS][FACES], int n)
 	}
     return result;
 }
-void n_printHand(int*** hand, char* suits[], char* faces[], int n)
+int getStatusOfHand(int** hand) {
+    if (isStraightFlush(hand)) {
+        return 8;
+    }
+    if (isFourOfAKind(hand)) {
+        return 7;
+    }
+    if (isFullHouse(hand)) {
+        return 6;
+    }
+    if (isFlush(hand)) {
+        return 5;
+    }
+    if (isStraight(hand)) {
+        return 4;
+    }
+    if (isThreeOfAKind(hand)) {
+        return 3;
+    }
+    if (isTwoPairs(hand)) {
+        return 2;
+    }
+    if (isPair(hand)) {
+        return 1;
+    }
+    return 0;
+}
+int** convertHands(int***hand, int pos)
+{
+    int** result = new int*[5];
+    for ( int i = 0; i < 5; i++)
+        result[i] = new int[2];
+
+    for ( int i = 0; i < 5; i++)
+    {
+        result[i][0] = hand[pos][i][0];
+        result[i][1] = hand[pos][i][1];
+    }
+    return result;
+}
+int* rankingHands(int*** hand, int n)
+{
+    //Khoi tao mang 2 chieu [gia tri cua rank][vi tri]
+    int** rank = new int *[n];
+    for ( int i = 0; i < n; i++)
+        rank[i] = new int[2];
+    int* pos = new int [n];
+    int temp = 0;
+    int temp1= 0;
+    for ( int i = 0; i < n; i++)
+    {
+        rank[i][0] = getStatusOfHand(convertHands(hand,i));
+        rank[i][1] = i;
+    }
+    for ( int i = 0; i < n - 1; i++)
+    {
+        for ( int j = i + 1; j < n; j++)
+        {
+            if (rank[j][0] > rank[i][0])
+            {
+                temp = rank[i][0];
+                rank[i][0] = rank[j][0];
+                rank[j][0] = temp;
+
+                temp1 = rank[i][1];
+                rank[i][1] = rank[j][1];
+                rank[j][1] = temp1;            
+            }
+        }
+    }   
+    for ( int i = 0; i < n; i++)
+    {
+        pos[i] = rank[i][1] + 1;
+    } 
+    return pos;
+}
+void printHandS(int*** hand, char* suits[], char* faces[], int n)
 {
 	int pos = 0;
 	while (pos != n )
 	{
+        cout << "Player " << pos + 1 << ": ";
 		for ( int i = 0; i < 5; i++)
 			cout << faces[hand[pos][i][1]] << suits[hand[pos][i][0]] << " ";
         cout << endl;
 		pos++;
 	}
+    cout << "Ranking: ";
+    for (int i = 0; i < n; i++)
+        cout << rankingHands(hand, n)[i] << " ";
 }
+
 int main()
 {
 	int deck[4][13] = {0};
@@ -339,17 +412,21 @@ int main()
     for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
+    int n = 4;
     result[0][0] = 1; result[0][1] = 3;
-    result[1][0] = 2; result[1][1] = 3;
-    result[2][0] = 3; result[2][1] = 0;
-    result[3][0] = 0; result[3][1] = 1;
+    result[1][0] = 2; result[1][1] = 5;
+    result[2][0] = 3; result[2][1] = 7;
+    result[3][0] = 0; result[3][1] = 0;
     result[4][0] = 1; result[4][1] = 1;
 	shuffleCards(deck);
-	printCardsShuffling(deck,suits,faces);
-	n_dealingForHands(deck,3);
-	n_printHand(n_dealingForHands(deck,3),suits,faces,3);
-	//dealingForHand(deck);
+	//printCardsShuffling(deck,suits,faces);
+    dealingForHand(deck);
 	//printHand(dealingForHand(deck),suits,faces);
+    //getHighestCard(result);
+	dealingForHandsS(deck,n);
+	printHandS(dealingForHandsS(deck,n),suits,faces,n);
+    rankingHands(dealingForHandsS(deck,n), n);
+
 	//cout << getHighestCard(result);
 	return 0;	
 
