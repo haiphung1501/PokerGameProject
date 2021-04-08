@@ -46,8 +46,8 @@ void printCardsShuffling(int deck[4][13], char *suits[], char *faces[])
 	{
 		for ( int j = 0; j < FACES; j++)
 		{
-			//cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << "\t";
-			cout << deck[i][j] << " ";
+			//cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << " ";
+            cout << deck[i][j] << " ";
 		}
 		cout << "\n";
 	};
@@ -82,6 +82,7 @@ int** dealingForHand(int deck[SUITS][FACES])
 		result[i][0] = temp[t] % 4;
 		t++;
 	}
+
 	//Sorting Cards
 	int test = 0;
 	int test_1 = 0;
@@ -106,136 +107,230 @@ void printHand(int** hand, char* suits[], char* faces[])
 {
 	for ( int i = 0; i < 5; i++)
 		cout << faces[hand[i][1]] << suits[hand[i][0]] << "\n";
-}	
+}
 
 int isFourOfAKind(int** hand) {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 4) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) {//xet tu quy
+        if (temp[i] == 4) {
             return 1;
         }
-        else {
-            count = 1;
+    }
+
+    return 0;
+}
+//check flush
+int isFlush(int** hand) {
+    int* temp = new int[4]; //tao mot mang chua so lan xuat hien cua 4 chat
+    for (int i = 0; i < 4; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) { //dem so lan xuat hien cua cac chat
+        temp[hand[i][0]]++;
+    }
+    for (int i = 0; i < 4; i++) { //xet thung
+        if (temp[i] == 5) {
+            return 1;
         }
     }
     return 0;
 }
-int isFlush(int** hand) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][0] != hand[j][0]) {
+//check threeofakind
+int isThreeOfAKind(int** hand) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) { //dem so lan xuat hien cua cac la bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) { //xet 3 la
+        if (temp[i] == 3) {
+            return 1;
+        }
+    }
+    return 0;
+}
+//check straight
+int isStraight(int** hand) {
+    int* temp = new int[5];
+    for (int i = 0; i < 5; i++) {
+        temp[i] = hand[i][1];
+    }
+
+    //check temp
+    // for (int i = 0; i < 5; i++) {
+    //     cout << temp[i] << " ";
+    // }
+
+    if (temp[0] == 0 && temp[1] == 9) { //xet truong hop 10 J Q K A
+        for (int i = 1; i < 4; i++) {
+            if (temp[i] != temp[i+1] - 1) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+    else { //truong hop binh thuong
+        for (int i = 0; i < 4; i++) {
+            if (temp[i] != temp[i+1] - 1) {
                 return 0;
             }
         }
     }
     return 1;
 }
-int isThreeOfAKind(int** hand) {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 3) {
+//check straightflush
+int isStraightFlush(int** hand) {
+    if (isStraight(hand) && isFlush(hand)) {
+        return 1;
+    }
+    return 0; 
+}
+//check 1 pair
+int isPair(int** hand) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua 13 la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    for (int i = 0; i < 13; i++) {//xet 1 doi
+        if (temp[i] == 2) {
             return 1;
         }
-        else {
-            count = 1;
+    }
+
+    return 0;
+}
+// chech 2 pairs
+int isTwoPairs(int** hand) {
+    int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua 13 la bai
+    for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
+        temp[i] = 0;
+    }
+    for (int i = 0; i < 5; i++) {//dem so lan xuat hien cua cac quan bai
+        temp[hand[i][1]]++;
+    }
+    int count = 0;
+    for (int i = 0; i < 13; i++) {//dem so doi
+        if (temp[i] == 2) {
+            count++;
         }
+    }
+    if (count == 2) { //xet 2 doi
+        return 1;
     }
     return 0;
 }
-int isStraight(int** hand) {
-	if ( hand[0][1] == 0 && hand[1][1] == 9)
-	{
-		for ( int i = 0; i < 4; i++)
-		{
-			if (hand[i][1] != hand[i+1][1] - 1)
-				return 0;
-		}
-		return 1;
-	}
-	else 
-	{
-		for ( int i = 0; i < 4; i++	)
-		{
-			if ( hand[i][1] != hand[i+1][1] - 1)
-				return 0;
-		}
-	}
-	return 1;
+// check fullhouse
+int isFullHouse(int** hand) {
+    if (isPair(hand) && isThreeOfAKind(hand)) { //xet cu lu
+        return 1;
+    }
+    return 0;
 }
-int isPair(int** hand)
+//test
+//int** createHandTest(int deck[SUITS][FACES], int a[])
+//lay gia tri cao nhat
+int getHighestCard(int** hand) {
+    if (isStraightFlush(hand)) {
+        return 8;
+    }
+    if (isFourOfAKind(hand)) {
+        return 7;
+    }
+    if (isFullHouse(hand)) {
+        return 6;
+    }
+    if (isFlush(hand)) {
+        return 5;
+    }
+    if (isStraight(hand)) {
+        return 4;
+    }
+    if (isThreeOfAKind(hand)) {
+        return 3;
+    }
+    if (isTwoPairs(hand)) {
+        return 2;
+    }
+    if (isPair(hand)) {
+        return 1;
+    }
+    return 0;
+}
+int*** n_dealingForHands(int deck[SUITS][FACES], int n)
 {
-    int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 2) {
-            return 1;
-        }
-        else {
-            count = 1;
+	int pos = 0;
+	int t = 0;
+	//Mang 1 chieu de luu tu 1 -> 52
+	int cards[MAX_CARDS];
+    //Mang 2 chieu [so thu tu nguoi choi][so thu tu la bai]
+    int** temp = new int*[n];
+    for ( int i = 0; i < n; i++)
+        temp[i] = new int[5];
+    //mang 3 chieu [so thu tu nguoi choi][suits][faces]
+    int*** result = new int**[n];
+    for ( int i = 0; i < n; i++)
+        result[i] = new int* [5];
+    for (int i = 0; i < n; i++) 
+    {
+        for (int j = 0; j < 5; j++) 
+        {
+            result[i][j] = new int[2];
         }
     }
-	return 0;
-}
-int isTwoPairs(int** hand){
-	int count = 1;
-	for ( int i = 0; i < 4; i++)
+    //Gan gia tri cua deck vao mang 1 chieu cards de xet cho de
+	for ( int i = 0; i < SUITS; i++)
 	{
-		for ( int j = i + 1; j < 5; j++)
+		for ( int j = 0; j < FACES; j++)
 		{
-			if (hand[i][1] == hand[j][1])
-				count++;
+			cards[t] = deck[i][j];
+			t++;
 		}
 	}
-	if ( count == 3)
-		return 1;
-	return 0;
-}
-int isFullHouse(int** hand)
-{
-	if (isThreeOfAKind(hand) == 0)
-		return 0;
-	int ThreeOfAKind = 0;
-	//code three of a kind to find a temporary variable
-	int count = 1;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5;j++) {
-            if (hand[i][1] == hand[j][1]) {
-                count++;
-            }
-        }
-        if (count == 3)
-            ThreeOfAKind = hand[i][1];
-		else
-			count == 1;
-    }
-
-	count = 1;
-    for (int i = 0; i < 4; i++) {
-		count = 1;
-        for (int j = i + 1; j < 5;j++) 
+	t = 0;
+    //Gan gia tri cua mang 1 chieu lan luot vao mang 2 chieu ( chia lan luot)
+	for ( int i = 0; i < 5 * n; i++)
+	{
+		temp[pos][t] = cards[i];
+		pos++;
+		if ( pos == n) 
 		{
-            if (hand[i][1] == hand[j][1]) 
-                count++;
+			pos = 0;
+			t++;
+		}
+	}
+    //Gan vao mang 3 chieu
+    while (pos != n )
+	{
+		for ( int i = 0; i < 5; i++)
+        {
+            result[pos][i][0] = temp[pos][i] % 4;
+            result[pos][i][1] = temp[pos][i] / 4;
         }
-        if (count == 2 && hand[i][1] != ThreeOfAKind) 
-			return 1;
-    }
-	return 0;
-	
+		pos++;
+	}
+    return result;
+}
+void n_printHand(int*** hand, char* suits[], char* faces[], int n)
+{
+	int pos = 0;
+	while (pos != n )
+	{
+		for ( int i = 0; i < 5; i++)
+			cout << faces[hand[pos][i][1]] << suits[hand[pos][i][0]] << " ";
+        cout << endl;
+		pos++;
+	}
 }
 int main()
 {
@@ -246,14 +341,16 @@ int main()
     }
     result[0][0] = 1; result[0][1] = 3;
     result[1][0] = 2; result[1][1] = 3;
-    result[2][0] = 3; result[2][1] = 3;
+    result[2][0] = 3; result[2][1] = 0;
     result[3][0] = 0; result[3][1] = 1;
     result[4][0] = 1; result[4][1] = 1;
-	//shuffleCards(deck);
-	//printCardsShuffling(deck,suits,faces);
+	shuffleCards(deck);
+	printCardsShuffling(deck,suits,faces);
+	n_dealingForHands(deck,3);
+	n_printHand(n_dealingForHands(deck,3),suits,faces,3);
 	//dealingForHand(deck);
-	printHand(result,suits,faces);
-	cout << " " << isFullHouse(result);
+	//printHand(dealingForHand(deck),suits,faces);
+	//cout << getHighestCard(result);
 	return 0;	
 
 }
