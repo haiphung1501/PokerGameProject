@@ -4,10 +4,13 @@
 #include <random>
 #include <ctime>
 
-using namespace std;
+#define MAX 9
+#define MAX_CARDS 52
+#define FACES 13
+#define SUITS 4
+#define COLS 3
 
-const int SUITS = 4;
-const int FACES = 13;
+using namespace std;
 
 char* suits[SUITS] = {"\3", "\4", "\5", "\6"};
 char* faces[FACES] = {"Ace", "2", "3", "4", "5",
@@ -15,117 +18,82 @@ char* faces[FACES] = {"Ace", "2", "3", "4", "5",
 
 //ham shuffle Cards
 void shuffleCards(int deck[SUITS][FACES]) {
-    int temp[51];
-
-    //tao mang temp co gia tri tu 1 - 52
-    for (int i = 0; i < 52; i++) {
-        temp[i] = i + 1;
+    int arr[MAX_CARDS] = {0};
+	int swapper = 0;
+	int temp = 0;
+	srand(time(NULL));
+	for ( int i = 0; i < MAX_CARDS ; i++) {
+		arr[i] = i;
     }
+	for ( int i = 0; i < MAX_CARDS; i++) {
+		swapper = rand() % MAX_CARDS ;
+		temp = arr[i];
+		arr[i] = arr[swapper];
+		arr[swapper] = temp;
+	}
 
-    //xao tron cac phan tu trong mang temp
-    srand(time(NULL)); 
-    random_shuffle(temp, temp + 52);
-    
-    //gan deck bang cac phan tu trong temp
-    int t = 0; 
+	int t = 0; 
     for (int i = 0; i < SUITS; i++) {
         for (int j = 0; j < FACES; j++) {
-            deck[i][j] = temp[t];
+            deck[i][j] = arr[t];
             t++;
-        }
-    }
-
-/*    //print deck[][]
-    int count = 1;
-    for (int i = 0; i < SUITS; i++) {
-        for (int j = 0; j < FACES; j++) {
-            cout << deck[i][j] << "\t";
-            if (count % 4 == 0) {
-                cout << endl;
-            }
-            count++;
-        }
-    }
-    cout << endl << endl;*/
+		}
+	}
 }
 //in ra Cards Shuffling
 void printCardsShuffling(int deck[SUITS][FACES], char *suits[], char *faces[]) {
 	//print deck
-    for (int num = 1; num <= 52; num++) {
-        for (int i = 0; i < SUITS; i++) {
-            for (int j = 0; j < FACES; j++) {
-                if (deck[i][j] == num) {
-                    cout << faces[j]<< suits[i] << "\t" << num << endl;
-                }
-            }
-        }
-    }
+    for ( int i = 0; i < SUITS; i++) {
+		for ( int j = 0; j < FACES; j++) {
+			//cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << "\t";
+			cout << deck[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 //luu gia tri cac quan bai cua nguoi choi
 int** dealingForHand(int deck[SUITS][FACES]) {
+    //tao mang 2 chieu = array
+	int temp[MAX_CARDS] = {0};
+	int t = 0;
+	int **result = new int *[5];
+	for ( int i = 0; i < 5; i++)
+		result[i] = new int[2];
 
-    //khoi tao con tro result
-    int** result = new int*[5];
-    for (int i = 0; i < 5; i++) {
-        result[i] = new int[2];
-    }
-
-    int t = 0; //t1 la bieu thi cho quan bai trong result
-
-    //duyet gia tri tim 5 la bai dau tien
-    int num = 1;
-    int ok = 0;
-    while (num <= 5) {
-        for (int i = 0; i < SUITS; i++) {
-            for (int j = 0; j < FACES; j++) {
-                if (deck[i][j] == num) {
-                    result[t][0] = i;
-                    result[t][1] = j;
-                    t++;
-                    ok = 1;
-                    break;
-                }
-            }
-            if (ok == 1) {
-                break;
-            }
-        }
-        ok = 0;
-        num++;
-    }
-    return result;
+	for ( int i = 0; i < SUITS; i++) {
+		for ( int j = 0; j < FACES; j++) {
+			temp[t] = deck[i][j];
+			t++;
+		}
+	}
+	t = 0;
+	for ( int i = 0; i < 5; i++) {
+			result[i][1] = temp[t] / 4;
+			t++;
+	}
+	t = 0;
+	for ( int i = 0; i < 5; i++) {
+		result[i][0] = temp[t] % 4;
+		t++;
+	}
+	//Sorting Cards
+	for ( int i = 0;  i < 4 ; i++){
+		for ( int j = i + 1; j < 5; j++) {
+			if ( result[i][1] > result[j][1]) {
+				swap(result[i][1], result[j][1]);
+                swap(result[i][0], result[j][0]);
+			}
+		}
+	}
+	return result;
 }
 //in ra cac la bai tren tay nguoi choi
 void printHand(int** hand, char* suits[], char* faces[]) {
-    //check
-    /*for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 2; j++) {
-            cout << hand[i][j] << "\t";
-        }
-        cout << endl;
-    }*/
-    //check
-    // for (int i = 0; i < 5; i++) {
-    //     cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
-    // }
-
-    // cout << endl << endl;
-    
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5; j++) {
-            if (hand[i][1] > hand[j][1]) {
-                swap(hand[i][1], hand[j][1]);
-                swap(hand[i][0], hand[i][0]);
-            }
-        }
-    }
-
     for (int i = 0; i < 5; i++) {
         cout << faces[hand[i][1]] << suits[hand[i][0]] << "\t" << endl;
     }
-
 }
-//check fourofakind
+//check four of a kind
 int isFourOfAKind(int** hand) {
     int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
     for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
@@ -158,7 +126,7 @@ int isFlush(int** hand) {
     }
     return 0;
 }
-//check threeofakind
+//check three of a kind
 int isThreeOfAKind(int** hand) {
     int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua cac la bai
     for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
@@ -227,7 +195,7 @@ int isPair(int** hand) {
 
     return 0;
 }
-// chech 2 pairs
+// check 2 pairs
 int isTwoPairs(int** hand) {
     int* temp = new int[13]; //tao mot mang chua so lan xuat hien cua 13 la bai
     for (int i = 0; i < 13; i++) { //khoi tao gia tri = 0
@@ -284,66 +252,78 @@ int getHighestCard(int** hand) {
     }
     return 0;
 }
-
+//chia bai cho n nguoi choi
 int***dealingForHands(int deck[SUITS][FACES], int n) {
     int*** results = new int**[n];
     for (int i = 0; i < n; i++) {
         results[i] = new int*[5];
-        for (int j = 0; j < 5; i++) {
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 5; j++) {
             results[i][j] = new int[2];
         }
     }
 
-    int t = 0; //t1 la bieu thi cho quan bai trong result
-
-    //duyet gia tri tim 5 la bai dau tien
-    int num = 1;
-    int ok = 0;
+    int temp[MAX_CARDS] = {0};
+	int t = 0;
+    for ( int i = 0; i < SUITS; i++) {
+		for ( int j = 0; j < FACES; j++) {
+			temp[t] = deck[i][j];
+			t++;
+		}
+	}
+	t = 0;
     for (int p = 0; p < n; p++) {
-        while (num <= 5) {
-            for (int i = 0; i < SUITS; i++) {
-                for (int j = 0; j < FACES; j++) {
-                    if (deck[i][j] == num) {
-                        results[p][t][0] = i;
-                        results[p][t][1] = j;
-                        t++;
-                        ok = 1;
-                        break;
-                    }
-                }
-                if (ok == 1) {
-                    break;
+        for ( int i = 0; i < 5; i++) {
+                results[p][i][1] = temp[t] / 4;
+                t++;
+        }
+    }
+	t = 0;
+    for (int p = 0; p < n; p++) {
+        for ( int i = 0; i < 5; i++) {
+            results[p][i][0] = temp[t] % 4;
+            t++;
+        }
+    }
+	//Sorting Cards
+    for (int p = 0; p < n; p++) {
+        for ( int i = 0;  i < 4 ; i++){
+            for ( int j = i + 1; j < 5; j++) {
+                if ( results[p][i][1] > results[p][j][1]) {
+                    swap(results[p][i][1], results[p][j][1]);
+                    swap(results[p][i][0], results[p][j][0]);
                 }
             }
-            ok = 0;
-            num++;
         }
     }
     return results;
 }
-
+//in ra bai tren tay nguoi choi mong muon
 void printHands(int*** hand, char* suits[], char* faces[]) {
     int x;
     cout << "nhap vao nguoi choi muon xem bai: ";
     cin >> x;
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 5; j++) {
-            if (hand[i][1] > hand[j][1]) {
-                swap(hand[x - 1][i][1], hand[x - 1][j][1]);
-                swap(hand[x - 1][i][0], hand[x - 1][i][0]);
-            }
-        }
-    }
-
     for (int i = 0; i < 5; i++) {
         cout << faces[hand[x - 1][i][1]] << suits[hand[x - 1][i][0]] << "\t" << endl;
+    }
+}
+//in ra bai cua tat ca moi nguoi
+void printHandsAll(int*** hand, char* suits[], char* faces[], int n) {
+    cout << endl << "bai cua moi nguoi";
+    for (int p = 0; p < n; p++) {
+        cout << "nguoi choi thu " << p + 1 << ":" << endl; 
+        for (int i = 0; i < 5; i++) {
+            cout << faces[hand[p][i][1]] << suits[hand[p][i][0]] << "\t" << endl;
+        }
+        cout << "-------------------------------------------" << endl;
     }
 }
 
 int main() {
 
     int deck[SUITS][FACES] = {0};
-    // shuffleCards(deck);
+    shuffleCards(deck);
     // printCardsShuffling(deck, suits, faces);
     // int** result = dealingForHand(deck);
 
@@ -367,6 +347,7 @@ int main() {
     cin >> n;
     int***results = dealingForHands(deck, n);
     printHands(results, suits, faces);
-
+    cout << "-------------------------------------------" << endl;
+    printHandsAll(results, suits, faces, n);
     return 0;
 }
