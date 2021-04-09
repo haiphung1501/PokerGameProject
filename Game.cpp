@@ -455,7 +455,7 @@ void PlayWithDealer() {
         } 
         if (ok == 0) {
             cout << "***************************************" << endl;
-            cout << "Het bai roi :((";
+            cout << "Dealer changed!!!";
             break;
         }
     }
