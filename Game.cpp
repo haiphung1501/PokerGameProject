@@ -453,7 +453,7 @@ void PlayWithDealer() {
             t++;
             ok--;
         } 
-        if (ok == 0 || t == 52) {
+        if (ok == 0) {
             cout << "***************************************" << endl;
             cout << "Het bai roi :((";
             break;
