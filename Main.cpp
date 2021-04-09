@@ -19,7 +19,6 @@ void shuffleCards(int deck[4][13])
 	int arr[MAX_CARDS] = {0};
 	int swapper = 0;
 	int temp = 0;
-	srand(time(NULL));
 	for ( int i = 0; i < MAX_CARDS ; i++)
 		arr[i] = i;
 	for ( int i = 0; i < MAX_CARDS; i++)
@@ -250,10 +249,10 @@ int isFullHouse(int** hand) {
 //lay gia tri cao nhat
 int getHighestCard(int** hand) {
     int max = hand[0][1];
-    for ( int i = 0; i < 4; i++)
+    for ( int i = 0; i < 5; i++)
     {
         if ( hand[i][1] == 0)
-            return 12;
+            return 13;
         if ( hand[i][1] > max)
             max = hand[i][1];
     }
@@ -261,57 +260,50 @@ int getHighestCard(int** hand) {
 }
 int*** dealingForHandsS(int deck[SUITS][FACES], int n)
 {
-	int pos = 0;
-	int t = 0;
-	//Mang 1 chieu de luu tu 1 -> 52
-	int cards[MAX_CARDS];
-    //Mang 2 chieu [so thu tu nguoi choi][so thu tu la bai]
-    int** temp = new int*[n];
-    for ( int i = 0; i < n; i++)
-        temp[i] = new int[5];
-    //mang 3 chieu [so thu tu nguoi choi][suits][faces]
-    int*** result = new int**[n];
-    for ( int i = 0; i < n; i++)
-        result[i] = new int* [5];
-    for (int i = 0; i < n; i++) 
-    {
-        for (int j = 0; j < 5; j++) 
-        {
-            result[i][j] = new int[2];
+    int*** results = new int**[n];
+    for (int i = 0; i < n; i++) {
+        results[i] = new int*[5];
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 5; j++) {
+            results[i][j] = new int[2];
         }
     }
-    //Gan gia tri cua deck vao mang 1 chieu cards de xet cho de
-	for ( int i = 0; i < SUITS; i++)
-	{
-		for ( int j = 0; j < FACES; j++)
-		{
-			cards[t] = deck[i][j];
+
+    int temp[MAX_CARDS] = {0};
+	int t = 0;
+    for ( int i = 0; i < SUITS; i++) {
+		for ( int j = 0; j < FACES; j++) {
+			temp[t] = deck[i][j];
 			t++;
 		}
 	}
 	t = 0;
-    //Gan gia tri cua mang 1 chieu lan luot vao mang 2 chieu ( chia lan luot)
-	for ( int i = 0; i < 5 * n; i++)
-	{
-		temp[pos][t] = cards[i];
-		pos++;
-		if ( pos == n) 
-		{
-			pos = 0;
-			t++;
-		}
-	}
-    //Gan vao mang 3 chieu
-    while (pos != n )
-	{
-		for ( int i = 0; i < 5; i++)
-        {
-            result[pos][i][0] = temp[pos][i] % 4;
-            result[pos][i][1] = temp[pos][i] / 4;
+    for ( int i = 0; i < 5; i++) {
+        for (int p = 0; p < n; p++) {
+                results[p][i][1] = temp[t] / 4;
+                t++;
         }
-		pos++;
-	}
-    return result;
+    }
+	t = 0;
+    for ( int i = 0; i < 5; i++) {
+        for (int p = 0; p < n; p++) {
+            results[p][i][0] = temp[t] % 4;
+            t++;
+        }
+    }
+	//Sorting Cards
+    for (int p = 0; p < n; p++) {
+        for ( int i = 0;  i < 4 ; i++){
+            for ( int j = i + 1; j < 5; j++) {
+                if ( results[p][i][1] > results[p][j][1]) {
+                    swap(results[p][i][1], results[p][j][1]);
+                    swap(results[p][i][0], results[p][j][0]);
+                }
+            }
+        }
+    }
+    return results;
 }
 int getStatusOfHand(int** hand) {
     if (isStraightFlush(hand)) {
@@ -360,8 +352,6 @@ int* rankingHands(int*** hand, int n)
     for ( int i = 0; i < n; i++)
         rank[i] = new int[2];
     int* pos = new int [n];
-    int temp = 0;
-    int temp1= 0;
     for ( int i = 0; i < n; i++)
     {
         rank[i][0] = getStatusOfHand(convertHands(hand,i));
@@ -373,13 +363,8 @@ int* rankingHands(int*** hand, int n)
         {
             if (rank[j][0] > rank[i][0])
             {
-                temp = rank[i][0];
-                rank[i][0] = rank[j][0];
-                rank[j][0] = temp;
-
-                temp1 = rank[i][1];
-                rank[i][1] = rank[j][1];
-                rank[j][1] = temp1;            
+                swap(rank[j][0], rank[i][0]);
+                swap(rank[j][1], rank[i][1]);           
             }
         }
     }   
@@ -400,32 +385,65 @@ void printHandS(int*** hand, char* suits[], char* faces[], int n)
         cout << endl;
 		pos++;
 	}
-    cout << "Ranking: ";
-    for (int i = 0; i < n; i++)
-        cout << rankingHands(hand, n)[i] << " ";
+    //cout << "Ranking: ";
+    //for (int i = 0; i < n; i++)
+        //cout << rankingHands(hand, n)[i] << " ";
+}
+void evaluateHands(int deck[SUITS][FACES], int***hand, int people, int rounds, char* suits[], char* faces[] )
+{
+    int** score = new int *[people];
+    int temp_max = 0;
+    for ( int i = 0; i < people; i++)
+        score[i] = new int[2];
+    for ( int i = 0; i < people; i++)
+    {
+        for ( int j = 0; j < 2; j++)
+            score[i][j] = 0;
+    }
+    int curRound = 0;
+    while ( curRound != rounds)
+    {
+        shuffleCards(deck);
+        dealingForHandsS(deck, people); 
+        for ( int i = 0; i < people; i++)
+        {
+            score[i][0] = score [i][0] + getStatusOfHand(convertHands(dealingForHandsS(deck, people),i));
+            score[i][1] = i;
+            //cout << score[i][0];
+        }
+         cout << "--------Round " << curRound + 1 <<"----------------" << endl;
+         printHandS(dealingForHandsS(deck,people), suits, faces, people);
+        curRound++;
+    }
+    //Print total Score of each player
+    for ( int i = 0; i < people; i++)
+        {
+            cout << "Total score of Player " << i + 1 << " is: " << score[i][0] << endl;
+            if ( score[i][0] > temp_max)
+                temp_max = score[i][0];
+        }
+    //Print all Highest score player
+    for ( int i = 0; i < people; i++)
+    {
+        if (score[i][0] == temp_max)
+            cout << "Player " << score[i][1] + 1 << " has the highest score : " << temp_max << endl;
+    }
 }
 
 int main()
 {
+    srand(time(NULL));
 	int deck[4][13] = {0};
-	int** result = new int*[5];
-    for (int i = 0; i < 5; i++) {
-        result[i] = new int[2];
-    }
     int n = 4;
-    result[0][0] = 1; result[0][1] = 3;
-    result[1][0] = 2; result[1][1] = 5;
-    result[2][0] = 3; result[2][1] = 7;
-    result[3][0] = 0; result[3][1] = 0;
-    result[4][0] = 1; result[4][1] = 1;
-	shuffleCards(deck);
+    int rounds = 5;
 	//printCardsShuffling(deck,suits,faces);
     dealingForHand(deck);
 	//printHand(dealingForHand(deck),suits,faces);
     //getHighestCard(result);
-	dealingForHandsS(deck,n);
-	printHandS(dealingForHandsS(deck,n),suits,faces,n);
-    rankingHands(dealingForHandsS(deck,n), n);
+	//dealingForHandsS(deck,n);
+	//printHandS(dealingForHandsS(deck,n),suits,faces,n);
+    //rankingHands(dealingForHandsS(deck,n), n);
+    evaluateHands(deck,dealingForHandsS(deck,n), n, rounds, suits, faces);
 
 	//cout << getHighestCard(result);
 	return 0;	
