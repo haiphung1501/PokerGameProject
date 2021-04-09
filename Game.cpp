@@ -21,11 +21,11 @@ void shuffleCards(int deck[SUITS][FACES]) {
     int arr[MAX_CARDS] = {0};
 	int swapper = 0;
 	int temp = 0;
-	srand(time(NULL));
-	for ( int i = 0; i < MAX_CARDS ; i++) {
+	
+	for (int i = 0; i < MAX_CARDS ; i++) {
 		arr[i] = i;
     }
-	for ( int i = 0; i < MAX_CARDS; i++) {
+	for (int i = 0; i < MAX_CARDS; i++) {
 		swapper = rand() % MAX_CARDS ;
 		temp = arr[i];
 		arr[i] = arr[swapper];
@@ -43,8 +43,8 @@ void shuffleCards(int deck[SUITS][FACES]) {
 //in ra Cards Shuffling
 void printCardsShuffling(int deck[SUITS][FACES], char *suits[], char *faces[]) {
 	//print deck
-    for ( int i = 0; i < SUITS; i++) {
-		for ( int j = 0; j < FACES; j++) {
+    for (int i = 0; i < SUITS; i++) {
+		for (int j = 0; j < FACES; j++) {
 			cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << "\n";
 			//cout << deck[i][j] << " ";
 		}
@@ -57,29 +57,29 @@ int** dealingForHand(int deck[SUITS][FACES]) {
 	int temp[MAX_CARDS] = {0};
 	int t = 0;
 	int **result = new int *[5];
-	for ( int i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 		result[i] = new int[2];
 
-	for ( int i = 0; i < SUITS; i++) {
-		for ( int j = 0; j < FACES; j++) {
+	for (int i = 0; i < SUITS; i++) {
+		for (int j = 0; j < FACES; j++) {
 			temp[t] = deck[i][j];
 			t++;
 		}
 	}
 	t = 0;
-	for ( int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 			result[i][1] = temp[t] / 4;
 			t++;
 	}
 	t = 0;
-	for ( int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		result[i][0] = temp[t] % 4;
 		t++;
 	}
 	//Sorting Cards
-	for ( int i = 0;  i < 4 ; i++){
-		for ( int j = i + 1; j < 5; j++) {
-			if ( result[i][1] > result[j][1]) {
+	for (int i = 0;  i < 4 ; i++){
+		for (int j = i + 1; j < 5; j++) {
+			if (result[i][1] > result[j][1]) {
 				swap(result[i][1], result[j][1]);
                 swap(result[i][0], result[j][0]);
 			}
@@ -227,10 +227,10 @@ int isFullHouse(int** hand) {
 //lay gia tri cao nhat
 int getHighestCard(int** hand) {
     int max = hand[0][1];
-    for ( int i = 1; i < 5; i++) {
-        if ( hand[i][1] == 0)
+    for (int i = 0; i < 5; i++) {
+        if (hand[i][1] == 0)
             return 13;
-        if ( hand[i][1] > max)
+        if (hand[i][1] > max)
             max = hand[i][1];
     }
     return max;
@@ -249,21 +249,21 @@ int***dealingForHands(int deck[SUITS][FACES], int n) {
 
     int temp[MAX_CARDS] = {0};
 	int t = 0;
-    for ( int i = 0; i < SUITS; i++) {
-		for ( int j = 0; j < FACES; j++) {
+    for (int i = 0; i < SUITS; i++) {
+		for (int j = 0; j < FACES; j++) {
 			temp[t] = deck[i][j];
 			t++;
 		}
 	}
 	t = 0;
-    for ( int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         for (int p = 0; p < n; p++) {
                 results[p][i][1] = temp[t] / 4;
                 t++;
         }
     }
 	t = 0;
-    for ( int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         for (int p = 0; p < n; p++) {
             results[p][i][0] = temp[t] % 4;
             t++;
@@ -271,9 +271,9 @@ int***dealingForHands(int deck[SUITS][FACES], int n) {
     }
 	//Sorting Cards
     for (int p = 0; p < n; p++) {
-        for ( int i = 0;  i < 4 ; i++){
-            for ( int j = i + 1; j < 5; j++) {
-                if ( results[p][i][1] > results[p][j][1]) {
+        for (int i = 0;  i < 4 ; i++){
+            for (int j = i + 1; j < 5; j++) {
+                if (results[p][i][1] > results[p][j][1]) {
                     swap(results[p][i][1], results[p][j][1]);
                     swap(results[p][i][0], results[p][j][0]);
                 }
@@ -333,10 +333,10 @@ int getStatusOfHand(int** hand) {
 
 int** convertHands(int***hand, int pos) {
     int** result = new int*[5];
-    for ( int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
-    for ( int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         result[i][0] = hand[pos][i][0];
         result[i][1] = hand[pos][i][1];
     }
@@ -346,34 +346,72 @@ int** convertHands(int***hand, int pos) {
 int* rankingHands(int*** hand, int n) {
     //Khoi tao mang 2 chieu [gia tri cua rank][vi tri]
     int** rank = new int *[n];
-    for ( int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         rank[i] = new int[2];
     }
     int* pos = new int [n];
     
-    for ( int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         rank[i][0] = getStatusOfHand(convertHands(hand,i));
         rank[i][1] = i;
     }
-    for ( int i = 0; i < n - 1; i++) {
-        for ( int j = i + 1; j < n; j++) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
             if (rank[j][0] > rank[i][0]) {
                 swap(rank[j][0], rank[i][0]);
-                swap(rank[j][0], rank[i][0]);           
+                swap(rank[j][1], rank[i][1]);           
             }
         }
     }   
-    for ( int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         pos[i] = rank[i][1] + 1;
     } 
     return pos;
 }
 
-int main() {
+void evaluateHands(int deck[SUITS][FACES], int***hand, int people, int rounds, char* suits[], char* faces[] ) {
+    int** score = new int *[people];
+    int temp_max = 0;
+    for (int i = 0; i < people; i++) {
+        score[i] = new int[2];
+    }
+    for (int i = 0; i < people; i++) {
+        for (int j = 0; j < 2; j++) {
+            score[i][j] = 0;
+        }
+    }
+    int curRound = 0;
+    while (curRound != rounds) {
+        shuffleCards(deck);
+        dealingForHands(deck, people); 
+        for (int i = 0; i < people; i++) {
+            score[i][0] = score[i][0] + getStatusOfHand(convertHands(dealingForHands(deck, people),i));
+            score[i][1] = i;
+            //cout << score[i][0];
+        }
+        cout << "--------Round " << curRound + 1 <<"----------------" << endl;
+        printHandsAll(dealingForHands(deck,people), suits, faces, people);
+        curRound++;
+    }
+    //Print total Score of each player
+    for (int i = 0; i < people; i++) {
+            cout << "Total score of Player " << i + 1 << " is: " << score[i][0] << endl;
+            if (score[i][0] > temp_max) {
+                temp_max = score[i][0];
+            }
+        }
+    //Print all Highest score player
+    for (int i = 0; i < people; i++) {
+        if (score[i][0] == temp_max)
+            cout << "Player " << score[i][1] + 1 << " has the highest score : " << temp_max << endl;
+    }
+}
 
+int main() {
+    srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     shuffleCards(deck);
-    printCardsShuffling(deck, suits, faces);
+    // printCardsShuffling(deck, suits, faces);
     // int** result = dealingForHand(deck);
 
     // check truc tiep
@@ -395,8 +433,12 @@ int main() {
     cout << "nhap vao so nguoi choi: ";
     cin >> n;
     int***results = dealingForHands(deck, n);
-    printHands(results, suits, faces);
+    // printHands(results, suits, faces);
     cout << "-------------------------------------------" << endl;
     printHandsAll(results, suits, faces, n);
+    int* check = rankingHands(results, n);
+    for (int i = 0; i < n; i++) {
+        cout << check[i] << " ";
+    }
     return 0;
 }
