@@ -226,31 +226,14 @@ int isFullHouse(int** hand) {
 //int** createHandTest(int deck[SUITS][FACES]), int a[]) {}
 //lay gia tri cao nhat
 int getHighestCard(int** hand) {
-    if (isStraightFlush(hand)) {
-        return 8;
+    int max = hand[0][1];
+    for ( int i = 1; i < 5; i++) {
+        if ( hand[i][1] == 0)
+            return 13;
+        if ( hand[i][1] > max)
+            max = hand[i][1];
     }
-    if (isFourOfAKind(hand)) {
-        return 7;
-    }
-    if (isFullHouse(hand)) {
-        return 6;
-    }
-    if (isFlush(hand)) {
-        return 5;
-    }
-    if (isStraight(hand)) {
-        return 4;
-    }
-    if (isThreeOfAKind(hand)) {
-        return 3;
-    }
-    if (isTwoPairs(hand)) {
-        return 2;
-    }
-    if (isPair(hand)) {
-        return 1;
-    }
-    return 0;
+    return max;
 }
 //chia bai cho n nguoi choi
 int***dealingForHands(int deck[SUITS][FACES], int n) {
@@ -318,6 +301,72 @@ void printHandsAll(int*** hand, char* suits[], char* faces[], int n) {
         }
         cout << "-------------------------------------------" << endl;
     }
+}
+
+int getStatusOfHand(int** hand) {
+    if (isStraightFlush(hand)) {
+        return 8;
+    }
+    if (isFourOfAKind(hand)) {
+        return 7;
+    }
+    if (isFullHouse(hand)) {
+        return 6;
+    }
+    if (isFlush(hand)) {
+        return 5;
+    }
+    if (isStraight(hand)) {
+        return 4;
+    }
+    if (isThreeOfAKind(hand)) {
+        return 3;
+    }
+    if (isTwoPairs(hand)) {
+        return 2;
+    }
+    if (isPair(hand)) {
+        return 1;
+    }
+    return 0;
+}
+
+int** convertHands(int***hand, int pos) {
+    int** result = new int*[5];
+    for ( int i = 0; i < 5; i++) {
+        result[i] = new int[2];
+    }
+    for ( int i = 0; i < 5; i++) {
+        result[i][0] = hand[pos][i][0];
+        result[i][1] = hand[pos][i][1];
+    }
+    return result;
+}
+
+int* rankingHands(int*** hand, int n) {
+    //Khoi tao mang 2 chieu [gia tri cua rank][vi tri]
+    int** rank = new int *[n];
+    for ( int i = 0; i < n; i++) {
+        rank[i] = new int[2];
+    }
+    int* pos = new int [n];
+    
+    for ( int i = 0; i < n; i++) {
+        rank[i][0] = getStatusOfHand(convertHands(hand,i));
+        rank[i][1] = i;
+    }
+    for ( int i = 0; i < n - 1; i++) {
+        for ( int j = i + 1; j < n; j++) {
+            if (rank[j][0] > rank[i][0]) {
+                swap(rank[j][0], rank[i][0]);
+                swap(rank[j][0], rank[i][0]);           
+            }
+        }
+    }   
+    for ( int i = 0; i < n; i++) {
+        pos[i] = rank[i][1] + 1;
+    } 
+    return pos;
 }
 
 int main() {
