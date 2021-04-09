@@ -293,7 +293,7 @@ void printHands(int*** hand, char* suits[], char* faces[]) {
 }
 //in ra bai cua tat ca moi nguoi
 void printHandsAll(int*** hand, char* suits[], char* faces[], int n) {
-    cout << endl << "bai cua moi nguoi";
+    cout << endl << "bai cua moi nguoi:\n";
     for (int p = 0; p < n; p++) {
         cout << "nguoi choi thu " << p + 1 << ":" << endl; 
         for (int i = 0; i < 5; i++) {
@@ -407,10 +407,67 @@ void evaluateHands(int deck[SUITS][FACES], int***hand, int people, int rounds, c
     }
 }
 
-int main() {
+void PlayWithDealer() {
     srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     shuffleCards(deck);
+    int n, rounds;
+    cout << "nhap vao so nguoi choi: ";
+    cin >> n;
+    // cout << "nhap vao so vong choi: ";
+    // cin >> rounds;
+    int*** results = dealingForHands(deck, n);
+    
+    int temp[MAX_CARDS] = {0};
+	int k = 0;
+    for (int i = 0; i < SUITS; i++) {
+		for (int j = 0; j < FACES; j++) {
+			temp[k] = deck[i][j];
+			k++;
+		}
+	}
+
+    printHandsAll(results, suits, faces, n);
+
+    cout << "-------------------------------------------" << endl;
+    
+    int t = n * 5, ok = 0;
+    if (52 - t < 3) {
+        cout << "Dealer chi co the doi " << 52 - t << "quan bai!!!" << endl;
+        ok = 52 - t;
+    }
+    else {
+        cout << "Dealer co the doi 3 quan bai!!!" << endl;
+        ok = 3;
+    }
+    
+    char yesOrNo;
+
+    for (int i = 0; i < 5; i++) {
+        cout << "(Dealer) Change card " << (i + 1) << "? (y/n): ";
+        cin.ignore(256, '\n');
+        cin >> yesOrNo;
+
+        if (yesOrNo == 'y') {
+            results[0][i][0] = temp[t] % 4;
+            results[0][i][1] = temp[t] / 4;
+            t++;
+            ok--;
+        } 
+        if (ok == 0 || t == 52) {
+            cout << "***************************************" << endl;
+            cout << "Het bai roi :((";
+            break;
+        }
+    }
+
+    printHandsAll(results, suits, faces, n);
+}
+
+int main() {
+    // srand(time(NULL));
+    // int deck[SUITS][FACES] = {0};
+    // shuffleCards(deck);
     // printCardsShuffling(deck, suits, faces);
     // int** result = dealingForHand(deck);
 
@@ -429,16 +486,21 @@ int main() {
 
     // cout << getHighestCard(result);
 
-    int n;
-    cout << "nhap vao so nguoi choi: ";
-    cin >> n;
-    int***results = dealingForHands(deck, n);
+    // int n, rounds;
+    // cout << "nhap vao so nguoi choi: ";
+    // cin >> n;
+    // cout << "nhap vao so vong choi: ";
+    // cin >> rounds;
+    // int***results = dealingForHands(deck, n);
     // printHands(results, suits, faces);
-    cout << "-------------------------------------------" << endl;
-    printHandsAll(results, suits, faces, n);
-    int* check = rankingHands(results, n);
-    for (int i = 0; i < n; i++) {
-        cout << check[i] << " ";
-    }
+    // cout << "-------------------------------------------" << endl;
+    // printHandsAll(results, suits, faces, n);
+    // int* check = rankingHands(results, n);
+    // for (int i = 0; i < n; i++) {
+    //     cout << check[i] << " ";
+    // }
+    // evaluateHands(deck, results, n, rounds, suits, faces);
+
+    PlayWithDealer();
     return 0;
 }
