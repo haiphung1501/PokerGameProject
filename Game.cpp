@@ -45,8 +45,8 @@ void printCardsShuffling(int deck[SUITS][FACES], char *suits[], char *faces[]) {
 	//print deck
     for ( int i = 0; i < SUITS; i++) {
 		for ( int j = 0; j < FACES; j++) {
-			//cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << "\t";
-			cout << deck[i][j] << " ";
+			cout << faces[deck[i][j] / 4] << suits[deck[i][j] % 4] << "\n";
+			//cout << deck[i][j] << " ";
 		}
 		cout << endl;
 	}
@@ -273,15 +273,15 @@ int***dealingForHands(int deck[SUITS][FACES], int n) {
 		}
 	}
 	t = 0;
-    for (int p = 0; p < n; p++) {
-        for ( int i = 0; i < 5; i++) {
+    for ( int i = 0; i < 5; i++) {
+        for (int p = 0; p < n; p++) {
                 results[p][i][1] = temp[t] / 4;
                 t++;
         }
     }
 	t = 0;
-    for (int p = 0; p < n; p++) {
-        for ( int i = 0; i < 5; i++) {
+    for ( int i = 0; i < 5; i++) {
+        for (int p = 0; p < n; p++) {
             results[p][i][0] = temp[t] % 4;
             t++;
         }
@@ -324,7 +324,7 @@ int main() {
 
     int deck[SUITS][FACES] = {0};
     shuffleCards(deck);
-    // printCardsShuffling(deck, suits, faces);
+    printCardsShuffling(deck, suits, faces);
     // int** result = dealingForHand(deck);
 
     // check truc tiep
