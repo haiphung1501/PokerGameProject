@@ -612,7 +612,7 @@ int main() {
 
     // PlayWithDealer();
 
-    // PlayerAndDealer();
-    
+    PlayerAndDealer();
+
     return 0;
 }
