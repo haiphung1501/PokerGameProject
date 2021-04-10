@@ -407,13 +407,30 @@ void evaluateHands(int deck[SUITS][FACES], int***hand, int people, int rounds, c
     }
 }
 
+void printHandsAllDealer(int*** hand, char* suits[], char* faces[], int n) {
+    cout << endl << "bai cua moi nguoi:\n";
+    for (int p = 0; p < n; p++) {
+        if (p == 0) {
+            cout << "Dealer:" << endl; 
+        }
+        else {
+            cout << "nguoi choi thu " << p << ":" << endl; 
+        }
+        for (int i = 0; i < 5; i++) {
+            cout << faces[hand[p][i][1]] << suits[hand[p][i][0]] << "\t" << endl;
+        }
+        cout << "-------------------------------------------" << endl;
+    }
+}
+
 void PlayWithDealer() {
     srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     shuffleCards(deck);
     int n, rounds;
-    cout << "nhap vao so nguoi choi: ";
+    cout << "nhap vao so nguoi choi(khong tinh Dealer): ";
     cin >> n;
+    n = n + 1;
     // cout << "nhap vao so vong choi: ";
     // cin >> rounds;
     int*** results = dealingForHands(deck, n);
@@ -427,7 +444,7 @@ void PlayWithDealer() {
 		}
 	}
     //in ra cac la bai tren tay nguoi choi
-    printHandsAll(results, suits, faces, n);
+    printHandsAllDealer(results, suits, faces, n);
 
     cout << "-------------------------------------------" << endl;
     
@@ -460,7 +477,100 @@ void PlayWithDealer() {
         }
     }
     //in ra cac la bai cua nguoi choi sau khi dealer doi bai
-    printHandsAll(results, suits, faces, n);
+    printHandsAllDealer(results, suits, faces, n);
+}
+
+void PlayerAndDealer() {
+    srand(time(NULL));
+    int deck[SUITS][FACES] = {0};
+    shuffleCards(deck);
+    int n, rounds;
+    cout << "nhap vao so nguoi choi(khong tinh Dealer): ";
+    cin >> n;
+
+    n = n + 1; // dam bao co 2 nguoi choi la 1player va 1dealer
+
+    if (n > 6) {
+        cout << "khong the choi che do nay!!!!!:(((";
+        return;
+    }
+    // cout << "nhap vao so vong choi: ";
+    // cin >> rounds;
+    int*** results = dealingForHands(deck, n);
+    //luu cac gia tri cua deck vao mang 1 chieu
+    int temp[MAX_CARDS] = {0};
+	int k = 0;
+    for (int i = 0; i < SUITS; i++) {
+		for (int j = 0; j < FACES; j++) {
+			temp[k] = deck[i][j];
+			k++;
+		}
+	}
+    //in ra cac la bai tren tay nguoi choi
+    printHandsAllDealer(results, suits, faces, n);
+
+    cout << "-------------------------------------------" << endl;
+
+    cout << "Players change cards";
+    cout << "Moi nguoi choi duoc phep doi toi da doi 3 la bai" << endl;
+
+    char yesOrNo;
+    int t = n * 5, ok = 3; //t la so bai da chia, ok la so lan nguoi choi co the doi bai
+    
+    for (int p = 1; p < n; p++) {
+        cout << "Player " << p << " changes cards!" << endl;
+        for (int i = 0; i < 5; i++) {
+            cout << "(Player) Change card " << (i + 1) << "? (y/n): ";
+            cin.ignore(256, '\n');
+            cin >> yesOrNo;
+
+            if (yesOrNo == 'y') {
+                results[p][i][0] = temp[t] % 4;
+                results[p][i][1] = temp[t] / 4;
+                t++;
+                ok--;
+            } 
+            if (ok == 0) {
+                cout << "***************************************" << endl;
+                cout << "Player changed!!!";
+                break;
+            }
+        }
+        ok = 3;
+    }
+
+    cout << "***************************************" << endl;
+    cout << "Dealer changes cards!!!" << endl;
+    
+    if (52 - t < 3) { //xet xem con du 3 la cho dealer changes khong
+        cout << "Dealer chi co the doi " << 52 - t << " quan bai!!!" << endl;
+        ok = 52 - t;
+    }
+    else {
+        cout << "Dealer co the doi 3 quan bai!!!" << endl;
+        ok = 3;
+    }
+    //dealer changes cards    
+    for (int i = 0; i < 5; i++) {
+        cout << "(Dealer) Change card " << (i + 1) << "? (y/n): ";
+        cin.ignore(256, '\n');
+        cin >> yesOrNo;
+
+        if (yesOrNo == 'y') {
+            results[0][i][0] = temp[t] % 4;
+            results[0][i][1] = temp[t] / 4;
+            t++;
+            ok--;
+        } 
+        if (ok == 0) {
+            cout << "***************************************" << endl;
+            cout << "Dealer changed!!!";
+            break;
+        }
+    }
+
+    //in ra cac la bai cua nguoi choi sau khi dealer doi bai
+    printHandsAllDealer(results, suits, faces, n);
 }
 
 int main() {
@@ -500,6 +610,9 @@ int main() {
     // }
     // evaluateHands(deck, results, n, rounds, suits, faces);
 
-    PlayWithDealer();
+    // PlayWithDealer();
+
+    // PlayerAndDealer();
+    
     return 0;
 }
