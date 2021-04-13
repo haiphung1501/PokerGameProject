@@ -678,32 +678,112 @@ void PlayerAndDealer() {
 }
 
 void Easy() {
-    srand(time(NULL));
-    int deck[SUITS][FACES] = {0};
-
-    int n, rounds;
-    cout << "nhap vao so nguoi choi: ";
-    cin >> n;
-    cout << "nhap vao so vong choi: ";
-    cin >> rounds;
-    int***results = dealingForHands(deck, n);
-    
-    evaluateHands(deck, results, n, rounds, suits, faces);
-}
-
-void Medium() {
     PlayerAndDealer();
 }
 
-void Hard() {
+void Medium() {
     PlayWithDealer();
+}
+
+void Hard() {
+    srand(time(NULL));
+    int deck[SUITS][FACES] = {0};
+    int n, rounds;
+    cout << "nhap vao so nguoi choi(khong tinh Dealer): ";
+    cin >> n;
+    n = n + 1;
+    cout << "nhap vao so vong choi: ";
+    cin >> rounds;
+
+    int** score = new int *[n];
+    int temp_max = 0;
+    for (int i = 0; i < n; i++) {
+        score[i] = new int[2];
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 2; j++) {
+            score[i][j] = 0;
+        }
+    }
+
+    int curRound = 0;
+    while (curRound != rounds) {
+        shuffleCards(deck);
+        int*** results = dealingForHands(deck, n);
+        //luu cac gia tri cua deck vao mang 1 chieu
+        int temp[MAX_CARDS] = {0};
+        int k = 0;
+        for (int i = 0; i < SUITS; i++) {
+            for (int j = 0; j < FACES; j++) {
+                temp[k] = deck[i][j];
+                k++;
+            }
+        }
+        
+        cout << "--------Round " << curRound + 1 <<"----------------" << endl;
+        //in ra cac la bai tren tay nguoi choi
+        printHandsAllDealer(results, suits, faces, n);
+
+        cout << "-------------------------------------------" << endl;
+        
+        int t = n * 5; //t la so la bai duoc chia, ok la so lan dealer changes
+        //dealer changes cards    
+        char yesOrNo;
+        for (int i = 0; i < 5; i++) {
+            cout << "(Dealer) Change card " << (i + 1) << "? (y/n): ";
+            cin.ignore(256, '\n');
+            cin >> yesOrNo;
+
+            if (yesOrNo == 'y') {
+                results[0][i][0] = temp[t] % 4;
+                results[0][i][1] = temp[t] / 4;
+                t++;
+            } 
+            if (i == 4) {
+                cout << "***************************************" << endl;
+                cout << "Dealer changed!!!";
+                break;
+            }
+        }
+        //in ra cac la bai cua nguoi choi sau khi dealer doi bai
+        printHandsAllDealer(results, suits, faces, n);
+
+        for (int i = 0; i < n; i++) {
+            score[i][0] = score[i][0] + getStatusOfHand(convertHands(results, i));
+            score[i][1] = i;
+            //cout << score[i][0];
+        }
+
+        curRound++;
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {
+                cout << "Total score of Dealer " << " is: " << score[i][0] << endl;
+            }
+            else {
+                cout << "Total score of Player " << i << " is: " << score[i][0] << endl;
+            }
+            if (score[i][0] > temp_max) {
+                temp_max = score[i][0];
+            }
+        }
+        //Print all Highest score player
+        for (int i = 0; i < n; i++) {
+            if (score[i][0] == temp_max)
+                if (i == 0) {
+                    cout << "Dealer " << " has the highest score : " << temp_max << endl;
+                }
+                else {
+                    cout << "Player " << score[i][1] << " has the highest score : " << temp_max << endl;
+                }        
+        }
+    }        
 }
 
 int main() {
 
     // Easy();
     // Medium();
-    // Hard();
+    Hard();
 
     return 0;
 }
