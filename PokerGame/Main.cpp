@@ -1,25 +1,23 @@
-
-#include "Game.cpp"
+//#include "Game.cpp"
 #include "Display.cpp"
-
 int main()
 {
-    srand(time(NULL));
-	int deck[4][13] = {0};
-    int n = 4;
-    int rounds = 5;
-	//printCardsShuffling(deck,suits,faces);
-    //dealingForHand(deck);
-	//printHand(dealingForHand(deck),suits,faces);
-    //getHighestCard(result);
-	//dealingForHandsS(deck,n);
-	//printHandS(dealingForHandsS(deck,n),suits,faces,n);
-    //rankingHands(dealingForHandsS(deck,n), n);
-    //evaluateHands(deck,dealingForHandsS(deck,n), n, rounds, suits, faces);
+	
+	srand(time(NULL));
+    shuffleCards(deck) ;
+    //printCardsShuffling(deck, suits, faces);
+    int rounds = 3;
+    int people = 6;
+    //printTable();
+    //evaluateHands(deck, dealingForHandsS(deck, people), people, rounds, suits, faces);
+    //Hard();
+	while (true)
+	{
+		start(100);
+	}
+    system("PAUSE");
 
-    printPokerText();
-    	//cout << getHighestCard(result);
-	return 0;	
+    //printHand(dealingForHands(deck), suits, faces);
+
 
 }
-

@@ -12,8 +12,8 @@
 using namespace std;
 
 char* suits[SUITS] = {"\3", "\4", "\5", "\6"};
-char* faces[FACES] = {"Ace", "2", "3", "4", "5",
-"6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+char* faces[FACES] = {"A", "2", "3", "4", "5",
+"6", "7", "8", "9", "10", "J", "Q", "K"};
 
 void shuffleCards(int deck[4][13]);
 void printCardsShuffling(int deck[4][13], char *suits[], char *faces[]);
@@ -35,6 +35,12 @@ int* rankingHands(int*** hand, int n);
 void printHandS(int*** hand, char* suits[], char* faces[], int n);
 void evaluateHands(int deck[SUITS][FACES], int***hand,
  int people, int rounds, char* suits[], char* faces[]);
+ void printHandsAllDealer(int*** hand, char* suits[], char* faces[], int n);
+ void PlayWithDealer();
+void PlayerAndDealer();
+void Easy();
+void Medium();
+void Hard();
 
 
 
