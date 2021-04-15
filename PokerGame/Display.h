@@ -15,3 +15,5 @@ void start(int n);
 void printPlayer();
 
 void printTable();
+
+void chooseOptions();

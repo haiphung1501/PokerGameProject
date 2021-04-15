@@ -860,7 +860,8 @@ void Hard() {
             score[i][1] = i;
             //cout << score[i][0];
         }
-
+        getch();
+        gotoxy(50,20); cout << "Press any Keys to countinue";
         curRound++;
     }   
     gotoxy(0,17);
