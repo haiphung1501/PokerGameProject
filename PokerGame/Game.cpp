@@ -3,6 +3,7 @@
 #include "Display.h"
 #include <Windows.h>
 #include <conio.h>
+using namespace std;
 int deck[4][13] = {0};
 void shuffleCards(int deck[4][13])
 {
@@ -53,10 +54,10 @@ void printCardsShuffling(int deck[4][13], char *suits[], char *faces[])
 		cout << "\n";
 	};
 }
-int** dealingForHands(int deck[SUITS][FACES])
+int** dealingForHand(int deck[SUITS][FACES])
 {
 	//Tạo mảng 2 chiều = array
-	int temp[MAX_CARDS] = {0};
+	int temp[MAX_CARDS] = {0};  
 	int t = 0;
 	int **result = new int *[5];
 	for ( int i = 0; i < 5; i++)
@@ -277,7 +278,7 @@ int getHighestCard(int** hand) {
     }
     return max;
 }
-int*** dealingForHandsS(int deck[SUITS][FACES], int n)
+int*** dealingForHands(int deck[SUITS][FACES], int n)
 {
     int*** results = new int**[n];
     for (int i = 0; i < n; i++) {
@@ -446,16 +447,16 @@ void evaluateHands(int deck[SUITS][FACES], int***hand, int people, int rounds, c
     {
         printTable();
         shuffleCards(deck);
-        dealingForHandsS(deck, people); 
+        dealingForHands(deck, people); 
         for ( int i = 0; i < people; i++)
         {
-            score[i][0] = score [i][0] + getStatusOfHand(convertHands(dealingForHandsS(deck, people),i));
+            score[i][0] = score [i][0] + getStatusOfHand(convertHands(dealingForHands(deck, people),i));
             score[i][1] = i;
             //cout << score[i][0];
         }
         gotoxy(40,3);
         cout << "--------Round " << curRound + 1 <<"-----------" << endl;
-        printHandS(dealingForHandsS(deck,people), suits, faces, people);
+        printHandS(dealingForHands(deck,people), suits, faces, people);
         gotoxy(45,19);
         cout << "Press any Key to go to next rounds";
         getch();
@@ -525,12 +526,14 @@ void PlayWithDealer() {
     srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     int n, rounds;
-    cout << "nhap vao so nguoi choi(khong tinh Dealer): ";
+    do
+    {    
+    cout << "Input the number of Player (Dealer doesn't included) ";
     cin >> n;
     n = n + 1;
-    cout << "nhap vao so vong choi: ";
+    cout << "Input the number of Rounds: ";
     cin >> rounds;
-
+    } while ( n >= 6 && n < 1 && rounds <= 0);
     int** score = new int *[n];
     int temp_max = 0;
     for (int i = 0; i < n; i++) {
@@ -548,7 +551,7 @@ void PlayWithDealer() {
         system("CLS");
         printTable();
         shuffleCards(deck);
-        int*** results = dealingForHandsS(deck, n);
+        int*** results = dealingForHands(deck, n);
         //luu cac gia tri cua deck vao mang 1 chieu
         int temp[MAX_CARDS] = {0};
         int k = 0;
@@ -596,7 +599,7 @@ void PlayWithDealer() {
         printHandsAllDealer(results, suits, faces, n);
 
         for (int i = 0; i < n; i++) {
-            score[i][0] = score [i][0] + getStatusOfHand(convertHands(dealingForHandsS(deck, n),i));
+            score[i][0] = score [i][0] + getStatusOfHand(convertHands(dealingForHands(deck, n),i));
             score[i][1] = i;
             //cout << score[i][0];
         }
@@ -638,17 +641,14 @@ void PlayerAndDealer() {
     srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     int n, rounds;
-    cout << "Input the number of players ( dealer doesn't count, less than 6 player): ";
+    do
+    {    
+    cout << "Input the number of Player (Dealer doesn't included) ";
     cin >> n;
-
-    n = n + 1; // dam bao co 2 nguoi choi la 1player va 1dealer
-
-    if (n > 6) {
-        cout << "khong the choi che do nay!!!!!:(((";
-        return;
-    }
-    cout << "Input the number of rounds: ";
+    n = n + 1;
+    cout << "Input the number of Rounds: ";
     cin >> rounds;
+    } while ( n >= 6 && n < 1 && rounds <= 0);
 
     int** score = new int *[n];
     int temp_max = 0;
@@ -667,7 +667,7 @@ void PlayerAndDealer() {
         system("CLS");
         printTable();
         shuffleCards(deck);
-        int*** results = dealingForHandsS(deck, n);
+        int*** results = dealingForHands(deck, n);
         //luu cac gia tri cua deck vao mang 1 chieu
         int temp[MAX_CARDS] = {0};
         int k = 0;
@@ -795,11 +795,14 @@ void Hard() {
     srand(time(NULL));
     int deck[SUITS][FACES] = {0};
     int n, rounds;
-    cout << "Input the number of players ( Dealer doesn't count ): ";
+    do
+    {    
+    cout << "Input the number of Player (Dealer doesn't included) ";
     cin >> n;
     n = n + 1;
-    cout << "Input the number of rounds: ";
+    cout << "Input the number of Rounds: ";
     cin >> rounds;
+    } while ( n >= 6 && n < 1 && rounds <= 0);
 
     int** score = new int *[n];
     int temp_max = 0;
@@ -818,7 +821,7 @@ void Hard() {
         system("CLS");
         printTable();        
         shuffleCards(deck);
-        int*** results = dealingForHandsS(deck, n);
+        int*** results = dealingForHands(deck, n);
         //luu cac gia tri cua deck vao mang 1 chieu
         int temp[MAX_CARDS] = {0};
         int k = 0;
@@ -905,7 +908,7 @@ void SinglePlayer()
     system("cls");
 
     printTable();
-    evaluateHands(deck,dealingForHandsS(deck, player), player, rounds, suits, faces);
+    evaluateHands(deck,dealingForHands(deck, player), player, rounds, suits, faces);
     getch();
     start(100);
 }
@@ -920,7 +923,7 @@ void PlayervsPlayer()
     cin >> rounds;
     system("cls");
 
-    evaluateHands(deck,dealingForHandsS(deck, people), people, rounds, suits, faces);
+    evaluateHands(deck,dealingForHands(deck, people), people, rounds, suits, faces);
     getch();
     start(100);
 }

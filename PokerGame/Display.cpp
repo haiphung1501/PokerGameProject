@@ -519,7 +519,6 @@ void start(int n)
 				}
 				if (y == 22)
 				{
-					//printduaxe();
 					aboutus();
 					system("cls");
 					start(99);

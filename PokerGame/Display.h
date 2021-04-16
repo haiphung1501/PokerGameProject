@@ -1,19 +1,19 @@
 #include <iostream>
 using namespace std;
 
-//Di chuyen den toa do (x,y) trong man hinh console
-void gotoxy(int x, int y);
 
-void Textcolor(int color);	// Lay bang mau
+void gotoxy(int x, int y);	// Move to x,y position in terminal
 
-void printPokerText();
+void Textcolor(int color);	// Get color 
 
-void aboutus();
+void printPokerText();		// Print Poker Text
 
-void start(int n);
+void aboutus();				// Print information about authors
 
-void printPlayer();
+void start(int n);			// Print Menu
 
-void printTable();
+void printTable();			// Print Poker Table
 
-void chooseOptions();
+void chooseOptions();		// Print every playing options
+
+void EasyMediumHard();		// Print leveling options
