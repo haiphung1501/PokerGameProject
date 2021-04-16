@@ -223,17 +223,62 @@ int isFullHouse(int** hand) {
     return 0;
 }
 //test
-int** createHandTest(int deck[SUITS][FACES], int a[]) {
+int** createHandTest() {
     //check truc tiep
     int** result = new int*[5];
     for (int i = 0; i < 5; i++) {
         result[i] = new int[2];
     }
-    result[0][0] = 0; result[0][1] = 2;
-    result[1][0] = 3; result[1][1] = 0;
-    result[2][0] = 2; result[2][1] = 0;
-    result[3][0] = 1; result[3][1] = 1;
-    result[4][0] = 1; result[4][1] = 0;
+    cout << "Suits:" << endl;
+    cout << "Hearts = 0" << endl << "Diamonds = 1" << endl
+         << "Clubs = 2" << endl << "Spades = 3" << endl;
+    cout << "Faces:" << endl;
+    cout << "A = 0" << endl 
+         << "2 = 1" << endl
+         << "3 = 2" << endl
+         << "4 = 3" << endl
+         << "5 = 4" << endl
+         << "6 = 5" << endl
+         << "7 = 6" << endl
+         << "8 = 7" << endl  
+         << "9 = 8" << endl
+         << "10 = 9" << endl
+         << "J = 10" << endl
+         << "Q = 11" << endl
+         << "K = 12" << endl 
+         << "****************************************" << endl;
+    cout << "5 cards you want:" << endl;
+    cout << "Card 1:" << endl;
+    cout << "Suit: ";
+    cin >> result[0][0];
+    cout << "Faces: ";
+    cin >> result[0][1];
+    cout << "***********" << endl;
+    cout << "Card 2:" << endl;
+    cout << "Suit: ";
+    cin >> result[1][0];
+    cout << "Faces: ";
+    cin >> result[1][1];
+    cout << "***********" << endl;
+    cout << "Card 3:" << endl;
+    cout << "Suit: ";
+    cin >> result[2][0];
+    cout << "Faces: ";
+    cin >> result[2][1];
+    cout << "***********" << endl;
+    cout << "Card 4:" << endl;
+    cout << "Suit: ";
+    cin >> result[3][0];
+    cout << "Faces: ";
+    cin >> result[3][1];
+    cout << "***********" << endl;
+    cout << "Card 5:" << endl;
+    cout << "Suit: ";
+    cin >> result[4][0];
+    cout << "Faces: ";
+    cin >> result[4][1];
+    cout << "***********" << endl;
+    
     return result;
 }
 //lay gia tri cao nhat
@@ -784,6 +829,16 @@ int main() {
     // Easy();
     // Medium();
     // Hard();
+
+    int** result = createHandTest();
+    cout << isStraightFlush(result);
+    cout << isFourOfAKind(result);
+    cout << isFullHouse(result);
+    cout << isFlush(result);
+    cout << isStraight(result);
+    cout << isThreeOfAKind(result);
+    cout << isTwoPairs(result);
+    cout << isPair(result);   
 
     return 0;
 }       
